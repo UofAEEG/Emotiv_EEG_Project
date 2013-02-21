@@ -89,6 +89,7 @@ public class RawData {
 				if (nSamplesTaken != null)
 				{
 					if (nSamplesTaken.getValue() != 0) {
+						Poll timer = new Poll();
 						
 						System.out.print("Updated: ");
 						System.out.println(nSamplesTaken.getValue());
@@ -100,8 +101,10 @@ public class RawData {
 						System.out.println(": ");
 						
 						double[] data = new double[nSamplesTaken.getValue()];
+						
+						timer.start();
 						for (int sampleIdx=0 ; sampleIdx<nSamplesTaken.getValue() ; ++sampleIdx) {
-							
+							System.out.print(timer.getCurrentTime()+" ");
 							for (int i = 0 ; i < 16 ; i++) {
 
 								Edk.INSTANCE.EE_DataGet(hData, i, data, nSamplesTaken.getValue());
