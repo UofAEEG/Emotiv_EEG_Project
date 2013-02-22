@@ -5,17 +5,14 @@ import com.sun.jna.Pointer;
 import com.sun.jna.ptr.IntByReference;
 
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class RawData {
 	      
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException  {
 		System.out.println("Hello Emotiv World");
 		
 		Pointer eEvent				= Edk.INSTANCE.EE_EmoEngineEventCreate();
@@ -25,12 +22,10 @@ public class RawData {
     	short composerPort			= 1726;
     	int option 					= 1;
     	int state  					= 0;
-    	float secs 					= 1;
+    	float secs 					= 60;
     	boolean readytocollect 		= false;
     	String fileName = new SimpleDateFormat("yyyyMMddhhmm'.txt'").format(new Date());
-    	//PrintWriter out = null;
     	BufferedWriter out = null;
-    	
     	
     	userID 			= new IntByReference(0);
 		nSamplesTaken	= new IntByReference(0);
@@ -68,17 +63,15 @@ public class RawData {
     	System.out.println("Start receiving EEG Data!");
     	
 		
-    	try {
-    		//File file = new File(fileName + ".txt");
-		    //out = new PrintWriter(new BufferedWriter(new FileWriter(fileName + ".txt", true)));
-    		//out = new PrintWriter(fileName, "UTF-8");
-    		out = new BufferedWriter(new FileWriter(fileName));
+    	//Setup the file for printing data to.
+		try {
+			out = new BufferedWriter(new FileWriter(fileName));
 		} catch (IOException e) {
-			System.out.println("Error writing to file");
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-  
-    	
-    	
+
+		//Start the timer.
     	Poll timer = new Poll();
     	timer.start();
     	
@@ -119,7 +112,6 @@ public class RawData {
 						System.out.print("Updated: ");
 						System.out.println(nSamplesTaken.getValue());
 						
-						
 						double[] data = new double[nSamplesTaken.getValue()];
 						
 						for (int sampleIdx=0 ; sampleIdx<nSamplesTaken.getValue() ; ++sampleIdx) {
@@ -129,6 +121,7 @@ public class RawData {
 							for (int i = 1 ; i <= 36 ; i++) {
 
 								Edk.INSTANCE.EE_DataGet(hData, i-1, data, nSamplesTaken.getValue());
+								//Write the data to the file
 								out.write(i + ": ");
 								out.write( Double.toString((data[sampleIdx])));
 								out.write(", ");
@@ -139,6 +132,7 @@ public class RawData {
 				}
 			}
 		}
+		//close all connections
 		out.close();
     	Edk.INSTANCE.EE_EngineDisconnect();
     	Edk.INSTANCE.EE_EmoStateFree(eState);
