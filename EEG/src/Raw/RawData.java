@@ -4,6 +4,10 @@ package Raw;
 import com.sun.jna.Pointer;
 import com.sun.jna.ptr.IntByReference;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Timestamp;
 
 public class RawData {
@@ -20,6 +24,8 @@ public class RawData {
     	int state  					= 0;
     	float secs 					= 1;
     	boolean readytocollect 		= false;
+    	String fileName = (new Timestamp((new java.util.Date()).getTime())).toString();
+    	PrintWriter out = null;
     	
     	
     	userID 			= new IntByReference(0);
@@ -56,6 +62,22 @@ public class RawData {
 		System.out.println(secs);
     		
     	System.out.println("Start receiving EEG Data!");
+    	
+    	IntByReference samplingRateOut = null;
+    	samplingRateOut	= new IntByReference(0);
+		Edk.INSTANCE.EE_DataGetSamplingRate(userID.getValue(), samplingRateOut);
+		System.out.println("SamplingRateOut: " + samplingRateOut.getValue());
+    	
+		
+    	try {
+		    out = new PrintWriter(new BufferedWriter(new FileWriter(fileName + ".txt", true)));
+		} catch (IOException e) {
+			System.out.println("Error writing to file");
+		}
+    	
+    	Poll timer = new Poll();
+    	timer.start();
+    	
 		while (true) 
 		{	
 			state = Edk.INSTANCE.EE_EngineGetNextEvent(eEvent);
@@ -89,36 +111,30 @@ public class RawData {
 				if (nSamplesTaken != null)
 				{
 					if (nSamplesTaken.getValue() != 0) {
-						Poll timer = new Poll();
 						
 						System.out.print("Updated: ");
 						System.out.println(nSamplesTaken.getValue());
 						
-						//IntByReference samplingRateOut = null;
-						//Edk.INSTANCE.EE_DataGetSamplingRate(userID.getValue(), samplingRateOut);
-						//System.out.println("SamplingRateOut: " + samplingRateOut);
-						System.out.print(new Timestamp((new java.util.Date()).getTime()));
-						System.out.println(": ");
+						out.print("0: " + timer.getCurrentTime() + " ms ,");
 						
 						double[] data = new double[nSamplesTaken.getValue()];
 						
-						timer.start();
 						for (int sampleIdx=0 ; sampleIdx<nSamplesTaken.getValue() ; ++sampleIdx) {
 							System.out.print(timer.getCurrentTime()+" ");
-							for (int i = 0 ; i < 16 ; i++) {
+							for (int i = 1 ; i <= 36 ; i++) {
 
-								Edk.INSTANCE.EE_DataGet(hData, i, data, nSamplesTaken.getValue());
-								System.out.print(i + ": ");
-								System.out.print(data[sampleIdx]);
-								System.out.print(", ");
+								Edk.INSTANCE.EE_DataGet(hData, i-1, data, nSamplesTaken.getValue());
+								out.print(i + ": ");
+								out.print(data[sampleIdx]);
+								out.print(", ");
 							}	
-							System.out.println();
+							out.println();
 						}
 					}
 				}
 			}
 		}
-    	
+		out.close();
     	Edk.INSTANCE.EE_EngineDisconnect();
     	Edk.INSTANCE.EE_EmoStateFree(eState);
     	Edk.INSTANCE.EE_EmoEngineEventFree(eEvent);
