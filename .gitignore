@@ -3,3 +3,4 @@
 ###mark commented this out for now###*.jar
 *.war
 *.ear
+bin/
