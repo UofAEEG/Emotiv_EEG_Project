@@ -24,7 +24,7 @@ public class RawData {
     	int state  					= 0;
     	float secs 					= 60;
     	boolean readytocollect 		= false;
-    	String fileName = new SimpleDateFormat("yyyyMMddhhmm'.txt'").format(new Date());
+    	String fileName = new SimpleDateFormat("yyyy-MM-dd-hh-mm'.txt'").format(new Date());
     	BufferedWriter out = null;
     	
     	userID 			= new IntByReference(0);
@@ -70,10 +70,6 @@ public class RawData {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		//Start the timer.
-    	Poll timer = new Poll();
-    	timer.start();
     	
 		while (true) 
 		{	
@@ -116,15 +112,17 @@ public class RawData {
 						
 						for (int sampleIdx=0 ; sampleIdx<nSamplesTaken.getValue() ; ++sampleIdx) {
 							
-							System.out.print(timer.getCurrentTime()+" ");
-							out.write("0: " + timer.getCurrentTime() + " ms, ");
-							for (int i = 1 ; i <= 36 ; i++) {
+							//write the millisecond timestamp
+							Edk.INSTANCE.EE_DataGet(hData, 19, data, nSamplesTaken.getValue());
+							out.write( Double.toString((data[sampleIdx] * 1000)));
+							
+							for (int i = 0 ; i < 25 ; i++) {
 
-								Edk.INSTANCE.EE_DataGet(hData, i-1, data, nSamplesTaken.getValue());
-								//Write the data to the file
-								out.write(i + ": ");
+								Edk.INSTANCE.EE_DataGet(hData, i, data, nSamplesTaken.getValue());
+								
+								//Write the column data to the file
 								out.write( Double.toString((data[sampleIdx])));
-								out.write(", ");
+								out.write(" ");
 							}	
 							out.newLine();
 						}
