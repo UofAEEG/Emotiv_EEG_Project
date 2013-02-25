@@ -1,6 +1,5 @@
 package Raw;
 
-
 import com.sun.jna.Pointer;
 import com.sun.jna.ptr.IntByReference;
 
@@ -13,15 +12,16 @@ import java.util.Date;
 public class RawData {
 	      
 	public static void main(String[] args) throws IOException  {
-		System.out.println("Hello Emotiv World");
 		
 		Pointer eEvent				= Edk.INSTANCE.EE_EmoEngineEventCreate();
     	Pointer eState				= Edk.INSTANCE.EE_EmoStateCreate();
     	IntByReference userID 		= null;
 		IntByReference nSamplesTaken= null;
+		IntByReference contactQuality= null;
     	short composerPort			= 1726;
     	int option 					= 1;
     	int state  					= 0;
+    	int numChannels             = 14;
     	float secs 					= 60;
     	boolean readytocollect 		= false;
     	String fileName = new SimpleDateFormat("yyyy-MM-dd-hh-mm'.txt'").format(new Date());
@@ -29,7 +29,8 @@ public class RawData {
     	
     	userID 			= new IntByReference(0);
 		nSamplesTaken	= new IntByReference(0);
-    	
+		contactQuality  = new IntByReference();
+
     	switch (option) {
 		case 1:
 		{
@@ -82,40 +83,53 @@ public class RawData {
 				Edk.INSTANCE.EE_EmoEngineEventGetUserId(eEvent, userID);
 
 				// Log the EmoState if it has been updated
-				if (eventType == Edk.EE_Event_t.EE_UserAdded.ToInt()) 
-				if (userID != null)
-					{
-						System.out.println("User added");
-						Edk.INSTANCE.EE_DataAcquisitionEnable(userID.getValue(),true);
-						readytocollect = true;
-					}
+				if (eventType == Edk.EE_Event_t.EE_UserAdded.ToInt()) {
+						if (userID != null)
+						{
+							System.out.println("User added");
+							Edk.INSTANCE.EE_DataAcquisitionEnable(userID.getValue(),true);
+							readytocollect = true;
+						}
+				}
+				
+				// Log the EmoState if it has been updated
+				if (eventType == Edk.EE_Event_t.EE_EmoStateUpdated.ToInt()) {
+					
+					Edk.INSTANCE.EE_EmoEngineEventGetEmoState(eEvent, eState);
+					
+					//get the contact quality
+					EmoState.INSTANCE.ES_GetContactQualityFromAllChannels(eState, contactQuality, numChannels);
+					
+				}
 			}
 			else if (state != EdkErrorCode.EDK_NO_EVENT.ToInt()) {
 				System.out.println("Internal error in Emotiv Engine!");
 				break;
 			}
 			
+			
+			
 			if (readytocollect) 
 			{
+				
+				//get the data from device
 				Edk.INSTANCE.EE_DataUpdateHandle(0, hData);
-
 				Edk.INSTANCE.EE_DataGetNumberOfSample(hData, nSamplesTaken);
 
 				if (nSamplesTaken != null)
 				{
 					if (nSamplesTaken.getValue() != 0) {
 						
-						System.out.print("Updated: ");
-						System.out.println(nSamplesTaken.getValue());
-						
 						double[] data = new double[nSamplesTaken.getValue()];
 						
-						for (int sampleIdx=0 ; sampleIdx<nSamplesTaken.getValue() ; ++sampleIdx) {
+						for (int sampleIdx=0 ; sampleIdx < nSamplesTaken.getValue() ; ++sampleIdx) {
 							
-							//write the millisecond timestamp
+							//write the millisecond time stamp
 							Edk.INSTANCE.EE_DataGet(hData, 19, data, nSamplesTaken.getValue());
-							out.write( Double.toString((data[sampleIdx] * 1000)));
+							//The millisecond column
+							out.write(Integer.toString((int) (data[sampleIdx] * 1000)) + " ");
 							
+							//the rest of the data columns
 							for (int i = 0 ; i < 25 ; i++) {
 
 								Edk.INSTANCE.EE_DataGet(hData, i, data, nSamplesTaken.getValue());
@@ -123,7 +137,21 @@ public class RawData {
 								//Write the column data to the file
 								out.write( Double.toString((data[sampleIdx])));
 								out.write(" ");
-							}	
+							}
+							
+							//the contact quality columns
+							//The ordering of the array is consistent with the ordering of the logical input
+				    		//channels in EE_InputChannels_enum.
+							
+							
+							/*
+							 * Maybe a bug, but the API call wants in intbyreference, yet
+							 * I think we should be giving it an array. this makes no sense
+							for(int i = 0; i < numChannels; i++) {
+								out.write(contactQuality[0]); ?????????
+							}
+							*/
+							
 							out.newLine();
 						}
 					}
