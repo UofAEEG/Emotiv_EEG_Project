@@ -4,3 +4,5 @@
 *.war
 *.ear
 bin/
+hs_err*
+test
