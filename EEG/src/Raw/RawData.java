@@ -27,6 +27,7 @@ public class RawData {
     	int option 					= 1;
     	int state  					= 0;
     	int numChannels             = 14;
+    	int rval = 0;
     	float secs 					= 60;
     	boolean readytocollect 		= false;
     	keyPressed = false;
@@ -110,7 +111,7 @@ public class RawData {
 					Edk.INSTANCE.EE_EmoEngineEventGetEmoState(eEvent, eState);
 					
 					//get the contact quality
-					EmoState.INSTANCE.ES_GetContactQualityFromAllChannels(eState, contactQuality, numChannels);
+					rval = EmoState.INSTANCE.ES_GetContactQualityFromAllChannels(eState, contactQuality, numChannels);
 					
 				}
 			}
@@ -161,13 +162,18 @@ public class RawData {
 							 * I think we should be giving it an array. this makes no sense
 							for(int i = 0; i < numChannels; i++) {
 								out.write(contactQuality[0]); ?????????
-							}
-							*/
+							}*/
 							
 							if (keyPressed) {
 								out.write("1");
 							} else {
 								out.write("0");
+							}
+							
+							for (int i = 1; i < 15 ; i++) {
+							
+								out.write(" " + EmoState.INSTANCE.ES_GetContactQuality(eState, i) + " ");
+							
 							}
 							
 							out.newLine();

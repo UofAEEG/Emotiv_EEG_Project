@@ -47,7 +47,7 @@ public class Listener extends Frame implements KeyListener {
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		l1.setText("Key Typed");
+		//l1.setText("Key Typed");
 		
 	}
 
