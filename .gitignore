@@ -3,6 +3,7 @@
 ###mark commented this out for now###*.jar
 *.war
 *.ear
-bin/
+bin/*
 hs_err*
-test
+test.txt
+bin/Raw/RawData.class
