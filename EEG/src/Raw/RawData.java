@@ -10,11 +10,16 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class RawData {
-	      
+	
+	static boolean keyPressed;
+	static Pointer eEvent;
+	static Pointer eState;
+	static BufferedWriter out = null;
+	
 	public static void main(String[] args) throws IOException  {
 		
-		Pointer eEvent				= Edk.INSTANCE.EE_EmoEngineEventCreate();
-    	Pointer eState				= Edk.INSTANCE.EE_EmoStateCreate();
+		eEvent				= Edk.INSTANCE.EE_EmoEngineEventCreate();
+    	eState				= Edk.INSTANCE.EE_EmoStateCreate();
     	IntByReference userID 		= null;
 		IntByReference nSamplesTaken= null;
 		IntByReference contactQuality= null;
@@ -24,8 +29,11 @@ public class RawData {
     	int numChannels             = 14;
     	float secs 					= 60;
     	boolean readytocollect 		= false;
+    	keyPressed = false;
+    	
     	String fileName = new SimpleDateFormat("yyyy-MM-dd-hh-mm'.txt'").format(new Date());
-    	BufferedWriter out = null;
+    	
+    	
     	
     	userID 			= new IntByReference(0);
 		nSamplesTaken	= new IntByReference(0);
@@ -71,7 +79,11 @@ public class RawData {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-    	
+		
+		
+		//start the key listener
+		new Listener ("EEG Key Listener");
+		
 		while (true) 
 		{	
 			state = Edk.INSTANCE.EE_EngineGetNextEvent(eEvent);
@@ -152,6 +164,12 @@ public class RawData {
 							}
 							*/
 							
+							if (keyPressed) {
+								out.write("1");
+							} else {
+								out.write("0");
+							}
+							
 							out.newLine();
 						}
 					}
@@ -159,11 +177,17 @@ public class RawData {
 			}
 		}
 		//close all connections
-		out.close();
-    	Edk.INSTANCE.EE_EngineDisconnect();
-    	Edk.INSTANCE.EE_EmoStateFree(eState);
-    	Edk.INSTANCE.EE_EmoEngineEventFree(eEvent);
-    	System.out.println("Disconnected!");
-	}
+		cleanUp();
 	
+	}
+
+
+	public static void cleanUp() throws IOException {
+		//close all connections
+		out.close();
+		Edk.INSTANCE.EE_EngineDisconnect();
+		Edk.INSTANCE.EE_EmoStateFree(eState);
+		Edk.INSTANCE.EE_EmoEngineEventFree(eEvent);
+		System.out.println("Disconnected!");
+	}
 }
