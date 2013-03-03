@@ -26,3 +26,17 @@
 25 ED_MARKER 
 26 ED_SYNC_SIGNAL
 27 KeyListener variable: 0=unpressed, 1=pressed
+28 AF3_Quality
+29 F7_Quality
+30 F3_Quality
+31 FC5_Quality
+32 T7_Quality
+33 P7_Quality
+34 O1_Quality
+35 O2_Quality
+36 P8_Quality
+37 T8_Quality
+38 FC6_Quality
+39 F4_Quality
+40 F8_Quality
+41 AF4_Quality
