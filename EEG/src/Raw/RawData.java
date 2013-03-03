@@ -75,7 +75,7 @@ public class RawData {
 		
     	//Setup the file for printing data to.
 		try {
-			out = new BufferedWriter(new FileWriter(fileName));
+			out = new BufferedWriter(new FileWriter("data/" + fileName));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
