@@ -33,15 +33,19 @@ public class Listener extends Frame implements KeyListener {
 	
 	@Override
 	public void keyPressed(KeyEvent e) {
-		l1.setText("Key Pressed");
-		RawData.keyPressed = true;
+		RawData.keyPressed = !RawData.keyPressed;
+		if(RawData.keyPressed) {
+			l1.setText("Recording...");
+		} else {
+			l1.setText("Idle");
+		}
 		
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		l1.setText("Key Released");
-		RawData.keyPressed = false;
+		//l1.setText("Key Released");
+		//RawData.keyPressed = false;
 		
 	}
 
