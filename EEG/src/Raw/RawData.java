@@ -16,6 +16,14 @@ public class RawData {
 	static Pointer eState;
 	static BufferedWriter out = null;
 	
+	// I assume Gabor wants us to push this matrix to SVM every time its full
+	// double [sample] [sensor]
+	//{[a,b,c,...],[a',b',c',...],[a",b",c",..]}
+	static BufferedWriter matrixout = null;
+	final static int MATRIX_SIZE = 128;
+	static double[][] sensorMatrix = new double[MATRIX_SIZE][14];
+	static int sample = 0;
+	
 	public static void main(String[] args) throws IOException  {
 		
 		eEvent				= Edk.INSTANCE.EE_EmoEngineEventCreate();
@@ -81,6 +89,16 @@ public class RawData {
 			e.printStackTrace();
 		}
 		
+    	/////////////////////////////////////////////////////////////////
+		// temporary
+		/////////////////////////////////////////////////////////////////
+		try {
+			matrixout = new BufferedWriter(new FileWriter("data/Matrix_"+fileName));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//////////////////////////////////////////////////////////////////
 		
 		//start the key listener
 		new Listener ("EEG Key Listener");
@@ -147,9 +165,30 @@ public class RawData {
 
 								Edk.INSTANCE.EE_DataGet(hData, i, data, nSamplesTaken.getValue());
 								
+								// fill in matrix
+								if (i >= 3 && i <= 16) {
+									sensorMatrix[sample][i-3] = data[sampleIdx];
+								}
+								
 								//Write the column data to the file
 								out.write( Double.toString((data[sampleIdx])));
 								out.write(" ");
+							}
+							
+							sample++;
+							// if matrix is full push to SVM
+							if (sample == MATRIX_SIZE-1) {
+								//push matrix to SVM
+								//then recreate the matrix;
+								
+								for (int i=0; i<MATRIX_SIZE; i++) {
+									for (int j=0; j<14; j++){
+										matrixout.write(Double.toString(sensorMatrix[i][j])+" ");
+									}
+									matrixout.write("\n");
+								}
+								matrixout.write("\n\n\n\n");
+								sample = 0;
 							}
 							
 							//the contact quality columns
