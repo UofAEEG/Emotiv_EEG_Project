@@ -23,11 +23,11 @@ public class RawData {
     	eState				= Edk.INSTANCE.EE_EmoStateCreate();
     	IntByReference userID 		= null;
 		IntByReference nSamplesTaken= null;
+		IntByReference contactQuality = null;
     	short composerPort			= 1726;
     	int option 					= 1;
     	int state  					= 0;
     	int numChannels             = 14;
-    	int rval = 0;
     	float secs 					= 60;
     	boolean readytocollect 		= false;
     	keyPressed = false;
@@ -37,7 +37,8 @@ public class RawData {
     	/* Initialize */
     	userID 			= new IntByReference(0);
 		nSamplesTaken	= new IntByReference(0);
-		sensorMatrix = new Matrix();
+		contactQuality = new IntByReference(0);
+		Matrix sensorMatrix = new Matrix();
 
 //BEGIN PROVIDED EMOTIV CODE
 //INGORE
@@ -111,8 +112,9 @@ public class RawData {
 					
 					Edk.INSTANCE.EE_EmoEngineEventGetEmoState(eEvent, eState);
 					
+					
 					//get the contact quality
-					rval = EmoState.INSTANCE.ES_GetContactQualityFromAllChannels(eState, contactQuality, numChannels);
+					EmoState.INSTANCE.ES_GetContactQualityFromAllChannels(eState, contactQuality, numChannels);
 					
 				}
 			}
@@ -152,7 +154,7 @@ public class RawData {
 								
 								// fill in matrix
 								if (i >= 3 && i <= 16) {
-									sensorMatrix[sample][i-3] = data[sampleIdx];
+									sensorMatrix.matrix[sample][i-3] = data[sampleIdx];
 								}
 								
 								//Write the column data to the file
@@ -200,7 +202,6 @@ public class RawData {
 
 	public static void cleanUp() throws IOException {
 		//close all connections
-	    matrixout.close();
 		out.close();
 		Edk.INSTANCE.EE_EngineDisconnect();
 		Edk.INSTANCE.EE_EmoStateFree(eState);
