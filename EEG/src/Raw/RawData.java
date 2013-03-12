@@ -15,14 +15,7 @@ public class RawData {
 	static Pointer eEvent;
 	static Pointer eState;
 	static BufferedWriter out = null;
-	
-	// I assume Gabor wants us to push this matrix to SVM every time its full
-	// double [sample] [sensor]
-	//{[a,b,c,...],[a',b',c',...],[a",b",c",..]}
-	static BufferedWriter matrixout = null;
-	final static int MATRIX_SIZE = 128;
-	static double[][] sensorMatrix = new double[MATRIX_SIZE][14];
-	static int sample = 0;
+	static String fileName = null;
 	
 	public static void main(String[] args) throws IOException  {
 		
@@ -30,7 +23,6 @@ public class RawData {
     	eState				= Edk.INSTANCE.EE_EmoStateCreate();
     	IntByReference userID 		= null;
 		IntByReference nSamplesTaken= null;
-		IntByReference contactQuality= null;
     	short composerPort			= 1726;
     	int option 					= 1;
     	int state  					= 0;
@@ -39,15 +31,16 @@ public class RawData {
     	float secs 					= 60;
     	boolean readytocollect 		= false;
     	keyPressed = false;
+    	fileName = new SimpleDateFormat("yyyy-MM-dd-hh-mm'.txt'").format(new Date());
+    	int sample = 0;
     	
-    	String fileName = new SimpleDateFormat("yyyy-MM-dd-hh-mm'.txt'").format(new Date());
-    	
-    	
-    	
+    	/* Initialize */
     	userID 			= new IntByReference(0);
 		nSamplesTaken	= new IntByReference(0);
-		contactQuality  = new IntByReference();
+		sensorMatrix = new Matrix();
 
+//BEGIN PROVIDED EMOTIV CODE
+//INGORE
     	switch (option) {
 		case 1:
 		{
@@ -79,30 +72,20 @@ public class RawData {
 		System.out.println(secs);
     		
     	System.out.println("Start receiving EEG Data!");
-    	
+//END PROVIDED EMOTIV CODE    	
 		
-    	//Setup the file for printing data to.
+    	/*Initialize the text file we are printing to for the visualization data*/
 		try {
 			out = new BufferedWriter(new FileWriter("data/" + fileName));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.err.println(e.getMessage());
 		}
-		
-    	/////////////////////////////////////////////////////////////////
-		// temporary
-		/////////////////////////////////////////////////////////////////
-		try {
-			matrixout = new BufferedWriter(new FileWriter("data/Matrix_"+fileName));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		//////////////////////////////////////////////////////////////////
-		
-		//start the key listener
+
+		//Initialize the key listener
 		new Listener ("EEG Key Listener");
 		
+//BEGIN PROVIDED EMOTIV CODE
+//IGNORE
 		while (true) 
 		{	
 			state = Edk.INSTANCE.EE_EngineGetNextEvent(eEvent);
@@ -137,9 +120,11 @@ public class RawData {
 				System.out.println("Internal error in Emotiv Engine!");
 				break;
 			}
+//END PROVIDED EMOTIV CODE			
 			
 			
 			
+			/*This is the main sensor reading loop*/
 			if (readytocollect) 
 			{
 				
@@ -177,44 +162,30 @@ public class RawData {
 							
 							sample++;
 							// if matrix is full push to SVM
-							if (sample == MATRIX_SIZE-1) {
+							if (sample == sensorMatrix.MATRIX_SIZE - 1) {
 								//push matrix to SVM
 								//then recreate the matrix;
-								
-								for (int i=0; i<MATRIX_SIZE; i++) {
-									for (int j=0; j<14; j++){
-										matrixout.write(Double.toString(sensorMatrix[i][j])+" ");
-									}
-									matrixout.write("\n");
-								}
-								matrixout.write("\n\n\n\n");
+								sensorMatrix.toFile();
 								sample = 0;
 							}
 							
-							//the contact quality columns
-							//The ordering of the array is consistent with the ordering of the logical input
-				    		//channels in EE_InputChannels_enum.
+							//print key pressed indicator
+							out.write((keyPressed)? "1" : "0");
+//							if (keyPressed) {
+//								out.write("1");
+//							} else {
+//								out.write("0");
+//							}
 							
-							
-							/*
-							 * Maybe a bug, but the API call wants in intbyreference, yet
-							 * I think we should be giving it an array. this makes no sense
-							for(int i = 0; i < numChannels; i++) {
-								out.write(contactQuality[0]); ?????????
-							}*/
-							
-							if (keyPressed) {
-								out.write("1");
-							} else {
-								out.write("0");
-							}
-							
+							// print the contact quality columns
+                            //The ordering of the array is consistent with the ordering of the logical input
+                            //channels in EE_InputChannels_enum.
 							for (int i = 1; i < 15 ; i++) {
 							
 								out.write(" " + EmoState.INSTANCE.ES_GetContactQuality(eState, i) + " ");
 							
 							}
-							
+							//next line of the data file
 							out.newLine();
 						}
 					}
@@ -229,6 +200,7 @@ public class RawData {
 
 	public static void cleanUp() throws IOException {
 		//close all connections
+	    matrixout.close();
 		out.close();
 		Edk.INSTANCE.EE_EngineDisconnect();
 		Edk.INSTANCE.EE_EmoStateFree(eState);
