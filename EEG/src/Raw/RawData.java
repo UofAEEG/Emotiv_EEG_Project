@@ -17,7 +17,7 @@ public class RawData {
 	static BufferedWriter out = null;
 	static String fileName = null;
 	
-	public static void main(String[] args) throws IOException  {
+	public static void main(String[] args) {
 		
 		eEvent				= Edk.INSTANCE.EE_EmoEngineEventCreate();
     	eState				= Edk.INSTANCE.EE_EmoStateCreate();
@@ -80,6 +80,7 @@ public class RawData {
 			out = new BufferedWriter(new FileWriter("data/" + fileName));
 		} catch (IOException e) {
 			System.err.println(e.getMessage());
+			System.exit(-1);
 		}
 
 		//Initialize the key listener
@@ -140,55 +141,60 @@ public class RawData {
 						
 						double[] data = new double[nSamplesTaken.getValue()];
 						
-						for (int sampleIdx=0 ; sampleIdx < nSamplesTaken.getValue() ; ++sampleIdx) {
-							
-							//write the millisecond time stamp
-							Edk.INSTANCE.EE_DataGet(hData, 19, data, nSamplesTaken.getValue());
-							//The millisecond column
-							out.write(Integer.toString((int) (data[sampleIdx] * 1000)) + " ");
-							
-							//the rest of the data columns
-							for (int i = 0 ; i < 25 ; i++) {
-
-								Edk.INSTANCE.EE_DataGet(hData, i, data, nSamplesTaken.getValue());
+						try {
+							for (int sampleIdx=0 ; sampleIdx < nSamplesTaken.getValue() ; ++sampleIdx) {
 								
-								// fill in matrix
-								if (i >= 3 && i <= 16) {
-									sensorMatrix.matrix[sample][i-3] = data[sampleIdx];
+								//write the millisecond time stamp
+								Edk.INSTANCE.EE_DataGet(hData, 19, data, nSamplesTaken.getValue());
+								//The millisecond column
+								out.write(Integer.toString((int) (data[sampleIdx] * 1000)) + " ");
+								
+								//the rest of the data columns
+								for (int i = 0 ; i < 25 ; i++) {
+	
+									Edk.INSTANCE.EE_DataGet(hData, i, data, nSamplesTaken.getValue());
+									
+									// fill in matrix
+									if (i >= 3 && i <= 16) {
+										sensorMatrix.matrix[sample][i-3] = data[sampleIdx];
+									}
+									
+									//Write the column data to the file
+									out.write( Double.toString((data[sampleIdx])));
+									out.write(" ");
 								}
 								
-								//Write the column data to the file
-								out.write( Double.toString((data[sampleIdx])));
-								out.write(" ");
+								sample++;
+								// if matrix is full push to SVM
+								if (sample == sensorMatrix.MATRIX_SIZE - 1) {
+									//push matrix to SVM
+									//then recreate the matrix;
+									sensorMatrix.toFile();
+									sample = 0;
+								}
+								
+								//print key pressed indicator
+								out.write((keyPressed)? "1" : "0");
+	//							if (keyPressed) {
+	//								out.write("1");
+	//							} else {
+	//								out.write("0");
+	//							}
+								 
+								// print the contact quality columns
+	                            //The ordering of the array is consistent with the ordering of the logical input
+	                            //channels in EE_InputChannels_enum.
+								for (int i = 1; i < 15 ; i++) {
+								
+									out.write(" " + EmoState.INSTANCE.ES_GetContactQuality(eState, i) + " ");
+								
+								}
+								//next line of the data file
+								out.newLine();
 							}
-							
-							sample++;
-							// if matrix is full push to SVM
-							if (sample == sensorMatrix.MATRIX_SIZE - 1) {
-								//push matrix to SVM
-								//then recreate the matrix;
-								sensorMatrix.toFile();
-								sample = 0;
-							}
-							
-							//print key pressed indicator
-							out.write((keyPressed)? "1" : "0");
-//							if (keyPressed) {
-//								out.write("1");
-//							} else {
-//								out.write("0");
-//							}
-							
-							// print the contact quality columns
-                            //The ordering of the array is consistent with the ordering of the logical input
-                            //channels in EE_InputChannels_enum.
-							for (int i = 1; i < 15 ; i++) {
-							
-								out.write(" " + EmoState.INSTANCE.ES_GetContactQuality(eState, i) + " ");
-							
-							}
-							//next line of the data file
-							out.newLine();
+						} catch(IOException e) {
+							System.out.println(e.getMessage());
+							System.exit(-1);
 						}
 					}
 				}
@@ -200,12 +206,18 @@ public class RawData {
 	}
 
 
-	public static void cleanUp() throws IOException {
+	public static void cleanUp() {
 		//close all connections
-		out.close();
-		Edk.INSTANCE.EE_EngineDisconnect();
-		Edk.INSTANCE.EE_EmoStateFree(eState);
-		Edk.INSTANCE.EE_EmoEngineEventFree(eEvent);
-		System.out.println("Disconnected!");
+		try {
+			out.close();
+		
+			Edk.INSTANCE.EE_EngineDisconnect();
+			Edk.INSTANCE.EE_EmoStateFree(eState);
+			Edk.INSTANCE.EE_EmoEngineEventFree(eEvent);
+			System.out.println("Disconnected!");
+			System.exit(0);
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
 	}
 }

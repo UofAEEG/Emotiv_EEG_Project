@@ -2,7 +2,6 @@ package Raw;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.io.IOException;
 
 public class Listener extends Frame implements KeyListener {
 
@@ -21,12 +20,7 @@ public class Listener extends Frame implements KeyListener {
 		setVisible(true);
 		addWindowListener(new WindowAdapter(){
 			public void windowClosing(WindowEvent e){
-				try {
-					RawData.cleanUp();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				RawData.cleanUp();
 			}
 		});
 	}
