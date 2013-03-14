@@ -39,11 +39,11 @@ public class RawData {
     	userID 			= new IntByReference(0);
 		nSamplesTaken	= new IntByReference(0);
 		contactQuality = new IntByReference(0);
-		Matrix sensorMatrix = new Matrix();
+		Matrix sensorMatrix = new Matrix(seconds);
 		
 		int startTime = 0;
 		int currentPattern = 1;
-		int maxPattern = 1;
+		int maxPattern = 3;
 		
 
 //BEGIN PROVIDED EMOTIV CODE
@@ -152,23 +152,25 @@ public class RawData {
 								
 								//write the millisecond time stamp
 								Edk.INSTANCE.EE_DataGet(hData, 19, data, nSamplesTaken.getValue());
-								/*
+								
 								int timeEnlapsed = (int) (data[sampleIdx] * 1000);
 								
 								// only execute code after 10 seconds
 								if (timeEnlapsed < 10000) continue;
 								
+								if (startTime == 0 && currentPattern > maxPattern)
+								{
+									cleanUp();
+									listener.setLabel("Should Stop.");
+									System.exit(0);
+								}
 								
 								if (startTime == 0 && !keyPressed) {
 									listener.setLabel("waiting...");
 									continue;
 								}
 								
-								if (startTime == 0 && currentPattern > maxPattern){
-									cleanUp();
-									listener.setLabel("Should Stop.");
-									System.exit(0);
-								}else if (startTime == 0) {
+								if (startTime == 0) {
 									startTime = timeEnlapsed;
 								} else if (timeEnlapsed - startTime > 10000) {
 									currentPattern++;
@@ -176,7 +178,7 @@ public class RawData {
 									keyPressed = false;
 									continue;
 								}
-								*/
+								
 								
 									
 									//The millisecond column
@@ -200,7 +202,7 @@ public class RawData {
 									
 									sample++;
 									// if matrix is full push to SVM
-									if (sample == (sensorMatrix.MATRIX_SIZE*sensorMatrix.numSeconds) - 1) {
+									if (sample == sensorMatrix.MATRIX_SIZE*sensorMatrix.numSeconds) {
 										//push matrix to SVM
 										//then recreate the matrix;
 										sensorMatrix.toFile();
@@ -244,6 +246,7 @@ public class RawData {
 	public static void cleanUp() {
 		//close all connections
 		try {
+			out.flush();
 			out.close();
 		
 			Edk.INSTANCE.EE_EngineDisconnect();

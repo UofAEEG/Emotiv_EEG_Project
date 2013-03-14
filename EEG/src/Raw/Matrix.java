@@ -35,16 +35,17 @@ public class Matrix {
 	    
 	    try {
 	        matrixout = new BufferedWriter(new FileWriter("data/Matrix_" + matrixNo + "_" + RawData.fileName));
-	        matrixout.write("size: "+MATRIX_SIZE*numSeconds);
-	        matrixout.newLine();
 	    
-	    for (int i=0; i<MATRIX_SIZE*numSeconds; i++) {
-	    	matrixout.write(i+": ");
-	        for (int j=0; j<NUM_SENSORS; j++){
-	            matrixout.write(Double.toString(matrix[i][j])+" ");
-	        }
-	        matrixout.newLine();
-	    }
+		    for (int i=0; i<MATRIX_SIZE*numSeconds; i++) {
+		    	matrixout.write(i+": ");
+		        for (int j=0; j<NUM_SENSORS; j++){
+		            matrixout.write(Double.toString(matrix[i][j])+" ");
+		        }
+		        matrixout.newLine();
+		    }
+	    
+		    matrixout.flush();
+		    matrixout.close();
 	        
 	        } catch (IOException e) {
 	        	System.out.println("exception!");
