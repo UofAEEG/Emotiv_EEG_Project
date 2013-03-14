@@ -36,6 +36,10 @@ public class Listener extends Frame implements KeyListener {
 		
 	}
 
+	public void setLabel(String str) {
+		l1.setText(str);
+	}
+	
 	@Override
 	public void keyReleased(KeyEvent e) {
 		//l1.setText("Key Released");
