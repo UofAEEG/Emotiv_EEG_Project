@@ -35,10 +35,11 @@ public class RawData {
     	int sample = 0;
     	
     	/* Initialize */
+    	final int seconds = 10;
     	userID 			= new IntByReference(0);
 		nSamplesTaken	= new IntByReference(0);
 		contactQuality = new IntByReference(0);
-		Matrix sensorMatrix = new Matrix();
+		Matrix sensorMatrix = new Matrix(seconds);
 
 //BEGIN PROVIDED EMOTIV CODE
 //INGORE
@@ -166,7 +167,7 @@ public class RawData {
 								
 								sample++;
 								// if matrix is full push to SVM
-								if (sample == sensorMatrix.MATRIX_SIZE - 1) {
+								if (sample == (sensorMatrix.MATRIX_SIZE*sensorMatrix.numSeconds) - 1) {
 									//push matrix to SVM
 									//then recreate the matrix;
 									sensorMatrix.toFile();
