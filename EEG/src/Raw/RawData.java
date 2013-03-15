@@ -16,6 +16,10 @@ public class RawData {
 	static Pointer eState;
 	static BufferedWriter out = null;
 	static String fileName = null;
+	static String patterns[] = 
+			{"Ball inside head rolling left",
+			"Ball inside head rolling right",
+			"Ball flying out of the top of head"};
 	
 	public static void main(String[] args) {
 		
@@ -90,7 +94,7 @@ public class RawData {
 		}
 
 		//Initialize the key listener
-		Listener listener = new Listener ("EEG Key Listener");
+		Listener listener = new Listener ("EEG Patterns Game");
 		
 //BEGIN PROVIDED EMOTIV CODE
 //IGNORE
@@ -157,10 +161,13 @@ public class RawData {
 								
 								// only execute code after 10 seconds
 								if (timeEnlapsed < 10000) continue;
-								else if (firstCheck){
+								else if (false){
 									for (int i = 1; i < 15 ; i++) {
-										if (EmoState.INSTANCE.ES_GetContactQuality(eState, i) != 4)
+										if (EmoState.INSTANCE.ES_GetContactQuality(eState, i) != 4){
+											listener.setLabel("Poor signal.");
+											while (!keyPressed);
 											System.exit(1);
+										}
 									}
 									firstCheck = false;
 								}
@@ -168,12 +175,15 @@ public class RawData {
 								if (startTime == 0 && currentPattern > maxPattern)
 								{
 									cleanUp();
-									listener.setLabel("Should Stop.");
+									listener.setLabel("Recording is finished. Press space to Exit.");
+									while (!keyPressed);
 									System.exit(0);
 								}
 								
 								if (startTime == 0 && !keyPressed) {
-									listener.setLabel("waiting...");
+									//listener.setLabel("Please relax all muscles, and clear your mind to visualize the following pattern in your head.",
+									//	"Press Space to record the following pattern: "+patterns[currentPattern-1]);
+									listener.setLabel("Please relax and visualize the following in your mind: ", patterns[currentPattern-1], "Press Space to record.");
 									continue;
 								}
 								

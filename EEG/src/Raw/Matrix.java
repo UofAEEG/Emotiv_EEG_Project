@@ -14,9 +14,9 @@ public class Matrix {
 	int numSeconds;
 	double[][] matrix = null;
 	int matrixNo = 0;
-	String patterns[] = {"Ball inside head rolling left",
-							"Ball inside head rolling right",
-							"Ball flying out of the top of head"};
+	//String patterns[] = {"Ball inside head rolling left",
+	//						"Ball inside head rolling right",
+	//						"Ball flying out of the top of head"};
 	
 	public Matrix() {
 	    super();
@@ -37,7 +37,7 @@ public class Matrix {
 	    BufferedWriter matrixout = null;
 	    
 	    try {
-	        matrixout = new BufferedWriter(new FileWriter("data/Matrix_" + patterns[matrixNo] + "_" +RawData.fileName));
+	        matrixout = new BufferedWriter(new FileWriter("data/Matrix_" + RawData.patterns[matrixNo] + "_" +RawData.fileName));
 	    
 		    for (int i=0; i<MATRIX_SIZE*numSeconds; i++) {
 		        for (int j=0; j<NUM_SENSORS; j++){
@@ -50,8 +50,6 @@ public class Matrix {
 		    matrixout.close();
 	        
 	        } catch (IOException e) {
-	        	System.out.println("exception!");
-	        	
 	            System.err.println(e.getMessage());
 	        }
 	        matrixNo++;
