@@ -35,7 +35,7 @@ public class RawData {
     	float secs 					= 60;
     	boolean readytocollect 		= false;
     	keyPressed = false;
-    	fileName = new SimpleDateFormat("yyyy-MM-dd-hh-mm'.txt'").format(new Date());
+    	fileName = new SimpleDateFormat("yyyy-MM-dd-hh-mm").format(new Date());
     	int sample = 0;
     	
     	/* Initialize */
@@ -44,13 +44,18 @@ public class RawData {
 		nSamplesTaken	= new IntByReference(0);
 		contactQuality = new IntByReference(0);
 		Matrix sensorMatrix = new Matrix(seconds);
+		Matrix svmMatrix = null;
 		
 		int startTime = 0;
-		int currentPattern = 1;
+		int curPattern = 1;
 		int maxPattern = 3;
 		boolean firstCheck = true;
-		boolean doneRecording = false;
-
+		boolean trainSVM = false;
+		int svmRepeat = 10;
+		int svmRepeatIdx = 0;
+		
+		BufferedWriter svmout = null;
+		
 //BEGIN PROVIDED EMOTIV CODE
 //INGORE
     	switch (option) {
@@ -88,7 +93,7 @@ public class RawData {
 		
     	/*Initialize the text file we are printing to for the visualization data*/
 		try {
-			out = new BufferedWriter(new FileWriter("data/" + fileName));
+			out = new BufferedWriter(new FileWriter("data/" + fileName + ".txt"));
 		} catch (IOException e) {
 			System.err.println(e.getMessage());
 			System.exit(-1);
@@ -173,13 +178,19 @@ public class RawData {
 									firstCheck = false;
 								}
 
-								if (startTime == 0 && currentPattern > maxPattern)
+								if (trainSVM == false && startTime == 0 && curPattern > maxPattern)
 								{
 									keyPressed = false;
-									cleanUp();
-									listener.setLabel("Recording is finished. Press space to Exit.");
-									while (!keyPressed);
-									System.exit(0);
+									//cleanUp();
+									trainSVM = true;
+									startTime = 0;
+									curPattern = 1; // reset pattern
+									sample = 0;
+									sensorMatrix = null;
+									continue;
+									//listener.setLabel("Recording is finished. Press space to Exit.");
+									//while (!keyPressed);
+									//System.exit(0);
 								}
 
 								/*
@@ -189,27 +200,82 @@ public class RawData {
 									keyPressed = false;
 								}*/
 								
-								if (startTime == 0 && !keyPressed) {
+								if (trainSVM == false && startTime == 0 && !keyPressed) {
 									//listener.setLabel("Please relax all muscles, and clear your mind to visualize the following pattern in your head.",
 									//	"Press Space to record the following pattern: "+patterns[currentPattern-1]);
-									listener.setLabel("Please relax and visualize the following in your mind: ", 
-											patterns[currentPattern-1], "Press Space to record.");
+									listener.setLabel("Please relax and visualize the following in your mind for 10 seconds: ", 
+											patterns[curPattern-1] + "(1 of 1)", "Press Space to record.");
 									SVMPrinting(data, sampleIdx, hData, nSamplesTaken, sensorMatrix, sample, false);
 									continue;
 								}
 								
-								if (startTime == 0) {
+								if (trainSVM == false && startTime == 0) {
 									startTime = timeEnlapsed;
-								} else if (timeEnlapsed - startTime > 10000) {
-									currentPattern++;
+								} else if (trainSVM == false && timeEnlapsed - startTime > 10000) {
+									curPattern++;
 									startTime = 0;
 									keyPressed = false;
-									doneRecording = true;
+									//doneRecording = true;
 									continue;
 								}
 								
-								SVMPrinting(data, sampleIdx, hData, nSamplesTaken, sensorMatrix, sample, true);
+								if (trainSVM == false)
+									SVMPrinting(data, sampleIdx, hData, nSamplesTaken, sensorMatrix, sample, true);
+								else if (trainSVM == true && sensorMatrix != null)
+									SVMPrinting(data, sampleIdx, hData, nSamplesTaken, sensorMatrix, sample, true);
+								else 
+									SVMPrinting(data, sampleIdx, hData, nSamplesTaken, sensorMatrix, sample, false);
+								
+								
+								if (trainSVM == true && curPattern > maxPattern) {
+									// exit program
+									cleanUp();
+									System.exit(0);
+								}
+								
+								if (trainSVM == true && !keyPressed) {
+									listener.setLabel("Please relax and visualize the following in your mind for 1 second: ", 
+											patterns[curPattern-1] + " ("+(svmRepeatIdx+1)+" of "+svmRepeat+")", "Press Space to record.");
+									continue;
+								}
+								
+								/*  / 1 second matrix ////////////////////////
+								if (trainSVM == true) {
+									for (int i = 3 ; i <= 16 ; i++) {
+										Edk.INSTANCE.EE_DataGet(hData, i, data, nSamplesTaken.getValue());
+										
+										if (matrixRecord && i >= 3 && i <= 16) {
+											sensorMatrix.matrix[sample][i-3] = data[sampleIdx];
+										}
+									}
+								}
+								*//////////////////////////////////////////
+								
+								if (trainSVM == true && startTime == 0) {
+									startTime = timeEnlapsed;
+
+									sensorMatrix = new Matrix();
+
+									continue;
+								} else if (trainSVM == true && timeEnlapsed - startTime > 1000) {
 									
+									startTime = 0;
+									keyPressed = false;
+									
+									svmRepeatIdx++;
+									if (svmRepeatIdx >= svmRepeat) {
+										svmRepeatIdx = 0;
+										curPattern++;
+										
+										// close svm file
+										svmout.flush();
+										svmout.close();
+										svmout = null;
+									}
+									
+									continue;
+								}
+								
 									//The millisecond column
 									//out.write(Integer.toString((int) (data[sampleIdx] * 1000)) + " ");
 									//out.write(Integer.toString(timeEnlapsed) + " ");
@@ -230,10 +296,17 @@ public class RawData {
 										out.write(" ");
 									}
 									*/
-									
-									sample++;
+									//if (trainSVM == false) sample++;
+									if (sensorMatrix != null) sample++;
+								
 									// if matrix is full push to SVM
-									if (sample == sensorMatrix.MATRIX_SIZE*sensorMatrix.numSeconds) {
+									/*if (trainSVM == false && sample == sensorMatrix.MATRIX_SIZE*sensorMatrix.numSeconds) {
+										//push matrix to SVM
+										//then recreate the matrix;
+										sensorMatrix.toFile();
+										sample = 0;
+									}*/
+									if (sensorMatrix != null && sample == sensorMatrix.MATRIX_SIZE*sensorMatrix.numSeconds) {
 										//push matrix to SVM
 										//then recreate the matrix;
 										sensorMatrix.toFile();
@@ -296,8 +369,9 @@ public class RawData {
 	public static void SVMPrinting(double[] data, int sampleIdx, Pointer hData, 
 									IntByReference nSamplesTaken, Matrix sensorMatrix, 
 									int sample, boolean matrixRecord) throws IOException {
-		
+
 		out.write(Integer.toString((int) (data[sampleIdx] * 1000)) + " ");
+
 		
 		for (int i = 0 ; i < 25 ; i++) {
 			

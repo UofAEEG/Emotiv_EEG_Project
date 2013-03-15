@@ -14,9 +14,7 @@ public class Matrix {
 	int numSeconds;
 	double[][] matrix = null;
 	int matrixNo = 0;
-	//String patterns[] = {"Ball inside head rolling left",
-	//						"Ball inside head rolling right",
-	//						"Ball flying out of the top of head"};
+
 	
 	public Matrix() {
 	    super();
@@ -37,7 +35,7 @@ public class Matrix {
 	    BufferedWriter matrixout = null;
 	    
 	    try {
-	        matrixout = new BufferedWriter(new FileWriter("data/Matrix_" + RawData.patterns[matrixNo] + "_" +RawData.fileName));
+	        matrixout = new BufferedWriter(new FileWriter("data/"+RawData.fileName+"_"+numSeconds+"s_Matrix_"+matrixNo+"_"+RawData.patterns[matrixNo] + ".txt"));
 	    
 		    for (int i=0; i<MATRIX_SIZE*numSeconds; i++) {
 		    	matrixout.write(i+": ");
