@@ -44,7 +44,7 @@ public class RawData {
 		int startTime = 0;
 		int currentPattern = 1;
 		int maxPattern = 3;
-		
+		boolean firstCheck = true;
 
 //BEGIN PROVIDED EMOTIV CODE
 //INGORE
@@ -157,7 +157,14 @@ public class RawData {
 								
 								// only execute code after 10 seconds
 								if (timeEnlapsed < 10000) continue;
-								
+								else if (firstCheck){
+									for (int i = 1; i < 15 ; i++) {
+										if (EmoState.INSTANCE.ES_GetContactQuality(eState, i) != 4)
+											System.exit(1);
+									}
+									firstCheck = false;
+								}
+
 								if (startTime == 0 && currentPattern > maxPattern)
 								{
 									cleanUp();
