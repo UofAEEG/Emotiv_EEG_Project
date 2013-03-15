@@ -186,7 +186,11 @@ public class RawData {
 									curPattern = 1; // reset pattern
 									sample = 0;
 									sensorMatrix.toFile();
-									sensorMatrix = new Matrix(1);
+									
+									cleanUp();
+									System.exit(0);
+									
+									//sensorMatrix = new Matrix(1);
 									
 									continue;
 								}
@@ -239,8 +243,8 @@ public class RawData {
 								if (trainSVM == true && startTime == 0) {
 									startTime = timeEnlapsed;
 									
-									cleanUp();
-									System.exit(0);
+									//cleanUp();
+									//System.exit(0);
 
 									continue;
 								} else if (trainSVM == true && timeEnlapsed - startTime > 1000) {
