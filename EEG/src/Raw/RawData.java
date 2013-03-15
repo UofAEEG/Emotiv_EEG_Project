@@ -44,7 +44,6 @@ public class RawData {
 		nSamplesTaken	= new IntByReference(0);
 		contactQuality = new IntByReference(0);
 		Matrix sensorMatrix = new Matrix(seconds);
-		Matrix svmMatrix = null;
 		
 		int startTime = 0;
 		int curPattern = 1;
@@ -167,7 +166,7 @@ public class RawData {
 								
 								// only execute code after 10 seconds
 								if (timeEnlapsed < 10000) continue;
-								else if (false){
+								else if (firstCheck){
 									for (int i = 1; i < 15 ; i++) {
 										if (EmoState.INSTANCE.ES_GetContactQuality(eState, i) != 4){
 											listener.setLabel("Poor signal.");
@@ -239,18 +238,6 @@ public class RawData {
 									continue;
 								}
 								
-								/*  / 1 second matrix ////////////////////////
-								if (trainSVM == true) {
-									for (int i = 3 ; i <= 16 ; i++) {
-										Edk.INSTANCE.EE_DataGet(hData, i, data, nSamplesTaken.getValue());
-										
-										if (matrixRecord && i >= 3 && i <= 16) {
-											sensorMatrix.matrix[sample][i-3] = data[sampleIdx];
-										}
-									}
-								}
-								*//////////////////////////////////////////
-								
 								if (trainSVM == true && startTime == 0) {
 									startTime = timeEnlapsed;
 
@@ -276,36 +263,8 @@ public class RawData {
 									continue;
 								}
 								
-									//The millisecond column
-									//out.write(Integer.toString((int) (data[sampleIdx] * 1000)) + " ");
-									//out.write(Integer.toString(timeEnlapsed) + " ");
-									
-									//the rest of the data columns
-									/*
-									for (int i = 0 ; i < 25 ; i++) {
-		
-										Edk.INSTANCE.EE_DataGet(hData, i, data, nSamplesTaken.getValue());
-										
-										// fill in matrix
-										if (i >= 3 && i <= 16) {
-											sensorMatrix.matrix[sample][i-3] = data[sampleIdx];
-										}
-										
-										//Write the column data to the file
-										out.write( Double.toString((data[sampleIdx])));
-										out.write(" ");
-									}
-									*/
-									//if (trainSVM == false) sample++;
 									if (sensorMatrix != null) sample++;
 								
-									// if matrix is full push to SVM
-									/*if (trainSVM == false && sample == sensorMatrix.MATRIX_SIZE*sensorMatrix.numSeconds) {
-										//push matrix to SVM
-										//then recreate the matrix;
-										sensorMatrix.toFile();
-										sample = 0;
-									}*/
 									if (sensorMatrix != null && sample == sensorMatrix.MATRIX_SIZE*sensorMatrix.numSeconds) {
 										//push matrix to SVM
 										//then recreate the matrix;
@@ -313,27 +272,6 @@ public class RawData {
 										sample = 0;
 									}
 									
-									//print key pressed indicator
-									//out.write("1");
-									//out.write((keyPressed)? "1" : "0");
-		//							if (keyPressed) {
-		//								out.write("1");
-		//							} else {
-		//								out.write("0");
-		//							}
-									 
-									// print the contact quality columns
-		                            //The ordering of the array is consistent with the ordering of the logical input
-		                            //channels in EE_InputChannels_enum.
-									/*
-									for (int i = 1; i < 15 ; i++) {
-									
-										out.write(" " + EmoState.INSTANCE.ES_GetContactQuality(eState, i) + " ");
-									
-									}
-									//next line of the data file
-									out.newLine();
-									*/
 							}
 						} catch(IOException e) {
 							System.out.println(e.getMessage());
