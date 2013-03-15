@@ -46,9 +46,12 @@ public class Listener extends Frame implements KeyListener {
 	
 	@Override
 	public void keyPressed(KeyEvent e) {
+		if (e.getKeyCode() != KeyEvent.VK_SPACE) return;
+		
 		RawData.keyPressed = !RawData.keyPressed;
 		if(RawData.keyPressed) {
 			l1.setText("Recording pattern...");
+			l3.setText("");
 		} else {
 			l1.setText("Idle");
 		}

@@ -49,6 +49,7 @@ public class RawData {
 		int currentPattern = 1;
 		int maxPattern = 3;
 		boolean firstCheck = true;
+		boolean doneRecording = false;
 
 //BEGIN PROVIDED EMOTIV CODE
 //INGORE
@@ -174,16 +175,26 @@ public class RawData {
 
 								if (startTime == 0 && currentPattern > maxPattern)
 								{
+									keyPressed = false;
 									cleanUp();
 									listener.setLabel("Recording is finished. Press space to Exit.");
 									while (!keyPressed);
 									System.exit(0);
 								}
+
+								/*
+								if (doneRecording) {	
+									listener.setLabel("Finished recording.","", "Press Space to record.");
+									while (!keyPressed){}
+									keyPressed = false;
+								}*/
 								
 								if (startTime == 0 && !keyPressed) {
 									//listener.setLabel("Please relax all muscles, and clear your mind to visualize the following pattern in your head.",
 									//	"Press Space to record the following pattern: "+patterns[currentPattern-1]);
-									listener.setLabel("Please relax and visualize the following in your mind: ", patterns[currentPattern-1], "Press Space to record.");
+									listener.setLabel("Please relax and visualize the following in your mind: ", 
+											patterns[currentPattern-1], "Press Space to record.");
+									SVMPrinting(data, sampleIdx, hData, nSamplesTaken, sensorMatrix, sample, false);
 									continue;
 								}
 								
@@ -193,16 +204,18 @@ public class RawData {
 									currentPattern++;
 									startTime = 0;
 									keyPressed = false;
+									doneRecording = true;
 									continue;
 								}
 								
-								
+								SVMPrinting(data, sampleIdx, hData, nSamplesTaken, sensorMatrix, sample, true);
 									
 									//The millisecond column
-									out.write(Integer.toString((int) (data[sampleIdx] * 1000)) + " ");
+									//out.write(Integer.toString((int) (data[sampleIdx] * 1000)) + " ");
 									//out.write(Integer.toString(timeEnlapsed) + " ");
 									
 									//the rest of the data columns
+									/*
 									for (int i = 0 ; i < 25 ; i++) {
 		
 										Edk.INSTANCE.EE_DataGet(hData, i, data, nSamplesTaken.getValue());
@@ -216,6 +229,7 @@ public class RawData {
 										out.write( Double.toString((data[sampleIdx])));
 										out.write(" ");
 									}
+									*/
 									
 									sample++;
 									// if matrix is full push to SVM
@@ -227,7 +241,8 @@ public class RawData {
 									}
 									
 									//print key pressed indicator
-									out.write((keyPressed)? "1" : "0");
+									//out.write("1");
+									//out.write((keyPressed)? "1" : "0");
 		//							if (keyPressed) {
 		//								out.write("1");
 		//							} else {
@@ -237,6 +252,7 @@ public class RawData {
 									// print the contact quality columns
 		                            //The ordering of the array is consistent with the ordering of the logical input
 		                            //channels in EE_InputChannels_enum.
+									/*
 									for (int i = 1; i < 15 ; i++) {
 									
 										out.write(" " + EmoState.INSTANCE.ES_GetContactQuality(eState, i) + " ");
@@ -244,7 +260,7 @@ public class RawData {
 									}
 									//next line of the data file
 									out.newLine();
-									
+									*/
 							}
 						} catch(IOException e) {
 							System.out.println(e.getMessage());
@@ -274,5 +290,33 @@ public class RawData {
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
 		}
+	}
+	
+	// print to file
+	public static void SVMPrinting(double[] data, int sampleIdx, Pointer hData, 
+									IntByReference nSamplesTaken, Matrix sensorMatrix, 
+									int sample, boolean matrixRecord) throws IOException {
+		
+		out.write(Integer.toString((int) (data[sampleIdx] * 1000)) + " ");
+		
+		for (int i = 0 ; i < 25 ; i++) {
+			
+			Edk.INSTANCE.EE_DataGet(hData, i, data, nSamplesTaken.getValue());
+			
+			if (matrixRecord && i >= 3 && i <= 16) {
+				sensorMatrix.matrix[sample][i-3] = data[sampleIdx];
+			}
+			
+			//Write the column data to the file
+			out.write( Double.toString((data[sampleIdx])));
+			out.write(" ");
+		}
+		
+		out.write((keyPressed)? "1" : "0");
+		
+		for (int i = 1; i < 15 ; i++) {
+			out.write(" " + EmoState.INSTANCE.ES_GetContactQuality(eState, i) + " ");
+		}
+		out.newLine();
 	}
 }

@@ -40,6 +40,7 @@ public class Matrix {
 	        matrixout = new BufferedWriter(new FileWriter("data/Matrix_" + RawData.patterns[matrixNo] + "_" +RawData.fileName));
 	    
 		    for (int i=0; i<MATRIX_SIZE*numSeconds; i++) {
+		    	matrixout.write(i+": ");
 		        for (int j=0; j<NUM_SENSORS; j++){
 		            matrixout.write(Double.toString(matrix[i][j])+" ");
 		        }
