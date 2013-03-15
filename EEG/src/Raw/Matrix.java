@@ -38,7 +38,6 @@ public class Matrix {
 	        matrixout = new BufferedWriter(new FileWriter("data/"+RawData.fileName+"_"+numSeconds+"s_Matrix_"+matrixNo+"_"+RawData.patterns[matrixNo] + ".txt"));
 	    
 		    for (int i=0; i<MATRIX_SIZE*numSeconds; i++) {
-		    	matrixout.write(i+": ");
 		        for (int j=0; j<NUM_SENSORS; j++){
 		            matrixout.write(Double.toString(matrix[i][j])+" ");
 		        }
