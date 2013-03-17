@@ -1,5 +1,8 @@
 package PatternGame;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
+
 import SDK.Edk;
 import SDK.EdkErrorCode;
 import SDK.EmoState;
@@ -72,7 +75,7 @@ public class DataCollector {
 	 * 14 sensors until full.
 	 * 
 	 */
-	public Matrix collectData(Matrix matrix) {
+	public Matrix collectData(Matrix matrix, BufferedWriter out) {
 		/*Initialization*/
 		int sample = 0;
 		IntByReference nSamplesTaken = new IntByReference(0);
@@ -115,16 +118,44 @@ public class DataCollector {
 						double[] data = new double[nSamplesTaken.getValue()];
 						
 						for (int sampleIdx=0 ; sampleIdx < nSamplesTaken.getValue() && sample < matrix.matrixSize; ++sampleIdx) {
-							
-							//loop through the the data columns
-							for (int i = 3 ; i < 17 ; i++) {
-								//get the raw data
-								Edk.INSTANCE.EE_DataGet(hData, i, data, nSamplesTaken.getValue());
-								//store the data in the Matrix
-								matrix.matrix[sample][i-3] = data[sampleIdx];
+							try {
+								//write the millisecond time stamp
+								Edk.INSTANCE.EE_DataGet(hData, 19, data, nSamplesTaken.getValue());
+								//The millisecond column
+								out.write(Integer.toString((int) (data[sampleIdx] * 1000)) + " ");
+								
+								//loop through the the data columns
+								for (int i = 0 ; i < 25 ; i++) {
+									
+									Edk.INSTANCE.EE_DataGet(hData, i, data, nSamplesTaken.getValue());
+									
+									if (i >= 3 && i <= 16) {
+										matrix.matrix[sample][i-3] = data[sampleIdx];
+									}
+									
+									//Write the column data to the file
+									out.write( Double.toString((data[sampleIdx])));
+									out.write(" ");
+								}
+								//increment the sample
+								sample++;
+								
+								//write key indicator column
+								out.write("0");
+								
+								//Print the contact quality columns to our file
+								//The ordering is consistent with the ordering of the logical input
+					    		//channels in EE_InputChannels_enum.
+								for (int i = 1; i < 15 ; i++) {
+									out.write(" " + EmoState.INSTANCE.ES_GetContactQuality(eState, i) + " ");
+								}
+								
+								//next row
+								out.newLine();
+							} catch (IOException e) {
+								System.err.println(e.getMessage());
+								System.exit(-1);
 							}
-							//increment the sample
-							sample++;
 						}//END for()
 					}
 				}
