@@ -28,8 +28,7 @@ public class DataCollector extends Thread {
 	private int sample;
 	
 	/*
-	 * Initializes the connection to the Emotiv device in
-	 * preparation for raw data collection.
+	 * Initializes and starts the thread of execution
 	 */
 	public DataCollector(String threadName, String fileName) {
 		super(threadName);
@@ -38,8 +37,10 @@ public class DataCollector extends Thread {
 	}
 	
 	/*
-	 * Fills the argument matrix with data from the
-	 * 14 sensors until full.
+	 * The threads main flow of execution. Initializes the Emotiv device and
+	 * then reads data from the sensors. This data is constantly written to the
+	 * file specified by fileName. Also, writes sensor data to the Matrix object
+	 * matrix when set to do so. 
 	 * 
 	 */
 	public void run() {
@@ -55,7 +56,6 @@ public class DataCollector extends Thread {
     	writingMatrix = false;
     	userID 			= new IntByReference(0);
 		nSamplesTaken	= new IntByReference(0);
-		
 		
 		/*Initialize the text file we are printing to for the visualization data*/
 		try {
@@ -75,33 +75,25 @@ public class DataCollector extends Thread {
 		
     	System.out.println("Started receiving EEG Data!");
     	
-
-		while (collecting) 
-		{	
+		while (collecting) {	
 			
 			state = Edk.INSTANCE.EE_EngineGetNextEvent(eEvent);
 
 			// New event needs to be handled
-			if (state == EdkErrorCode.EDK_OK.ToInt()) 
-			{
+			if (state == EdkErrorCode.EDK_OK.ToInt()) {
 				int eventType = Edk.INSTANCE.EE_EmoEngineEventGetType(eEvent);
 				Edk.INSTANCE.EE_EmoEngineEventGetUserId(eEvent, userID);
 
 				// Log the EmoState if it has been updated
 				if (eventType == Edk.EE_Event_t.EE_UserAdded.ToInt()) {
-						if (userID != null)
-						{
+						if (userID != null) {
 							System.out.println("User added");
 							Edk.INSTANCE.EE_DataAcquisitionEnable(userID.getValue(),true);
 							readytocollect = true;
 						}
 				}
-				
-				// Log the EmoState if it has been updated
 				if (eventType == Edk.EE_Event_t.EE_EmoStateUpdated.ToInt()) {
-					
 					Edk.INSTANCE.EE_EmoEngineEventGetEmoState(eEvent, eState);
-					
 				}
 			}
 			else if (state != EdkErrorCode.EDK_NO_EVENT.ToInt()) {
@@ -114,8 +106,7 @@ public class DataCollector extends Thread {
 				Edk.INSTANCE.EE_DataUpdateHandle(0, hData);
 				Edk.INSTANCE.EE_DataGetNumberOfSample(hData, nSamplesTaken);
 
-				if (nSamplesTaken != null)
-				{
+				if (nSamplesTaken != null) {
 					if (nSamplesTaken.getValue() != 0) {
 						
 						double[] data = new double[nSamplesTaken.getValue()];
@@ -146,9 +137,8 @@ public class DataCollector extends Thread {
 								}
 								
 								//increment the sample
-								if(writingMatrix) {
+								if(writingMatrix)
 									sample++;
-								}
 								
 								//write key indicator column
 								out.write("0");
@@ -156,9 +146,8 @@ public class DataCollector extends Thread {
 								//Print the contact quality columns to our file
 								//The ordering is consistent with the ordering of the logical input
 					    		//channels in EE_InputChannels_enum.
-								for (int i = 1; i < 15 ; i++) {
+								for (int i = 1; i < 15 ; i++)
 									out.write(" " + EmoState.INSTANCE.ES_GetContactQuality(eState, i) + " ");
-								}
 								
 								//next row
 								out.newLine();
@@ -175,7 +164,9 @@ public class DataCollector extends Thread {
 	}
 
 	/*
-	 *
+	 * Creates a Matrix object of size seconds and
+	 * sets the thread to fill it with data until
+	 * full.
 	 */
 	public void setMatrix(int seconds) {
 		this.matrix = new Matrix(seconds);
@@ -184,7 +175,7 @@ public class DataCollector extends Thread {
 	}
 	
 	/*
-	 * 
+	 * returns the matrix object
 	 */
 	public Matrix getMatrix() {
 		return this.matrix;
