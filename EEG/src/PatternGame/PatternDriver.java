@@ -108,7 +108,7 @@ public class PatternDriver extends JFrame {
 		//wait for data to stabilize
 		System.out.println("Waiting 10 seconds for signals to stabalize...");
 		try {
-			Thread.sleep(3000); //TODO fix after testing
+			Thread.sleep(10000);
 		} catch (InterruptedException e) {
 			System.err.println(e.getMessage());
 			System.exit(-1);
