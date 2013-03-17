@@ -7,3 +7,6 @@ bin/*
 hs_err*
 test.txt
 bin/Raw/RawData.class
+VisualizationData/
+Data/
+
