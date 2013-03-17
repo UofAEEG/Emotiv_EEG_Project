@@ -1,92 +1,60 @@
-package Raw;
+package Visualization;
 
+import SDK.Edk;
+import SDK.EdkErrorCode;
+import SDK.EmoState;
 import com.sun.jna.Pointer;
 import com.sun.jna.ptr.IntByReference;
-
 import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
-public class RawData {
+public class Data {
 	
 	static boolean keyPressed;
 	static Pointer eEvent;
 	static Pointer eState;
-	static BufferedWriter out = null;
+	static boolean collecting;
 	
-	public static void main(String[] args) throws IOException  {
+	/*
+	 * Uninstantiatable
+	 */
+	private Data() {
+		super();
+	}
+	
+	public static void getData(BufferedWriter out) throws IOException {
 		
+		/*Initialization*/
 		eEvent				= Edk.INSTANCE.EE_EmoEngineEventCreate();
     	eState				= Edk.INSTANCE.EE_EmoStateCreate();
     	IntByReference userID 		= null;
 		IntByReference nSamplesTaken= null;
-		IntByReference contactQuality= null;
-    	short composerPort			= 1726;
-    	int option 					= 1;
     	int state  					= 0;
-    	int numChannels             = 14;
-    	int rval = 0;
     	float secs 					= 60;
     	boolean readytocollect 		= false;
     	keyPressed = false;
-    	
-    	String fileName = new SimpleDateFormat("yyyy-MM-dd-hh-mm'.txt'").format(new Date());
-    	
-    	
-    	
+    	collecting = true;
     	userID 			= new IntByReference(0);
 		nSamplesTaken	= new IntByReference(0);
-		contactQuality  = new IntByReference();
 
-    	switch (option) {
-		case 1:
-		{
+//BEGIN PROVIDED EMOTIV CODE	
 			if (Edk.INSTANCE.EE_EngineConnect("Emotiv Systems-5") != EdkErrorCode.EDK_OK.ToInt()) {
 				System.out.println("Emotiv Engine start up failed.");
 				return;
 			}
-			break;
-		}
-		case 2:
-		{
-			System.out.println("Target IP of EmoComposer: [127.0.0.1] ");
-
-			if (Edk.INSTANCE.EE_EngineRemoteConnect("127.0.0.1", composerPort, "Emotiv Systems-5") != EdkErrorCode.EDK_OK.ToInt()) {
-				System.out.println("Cannot connect to EmoComposer on [127.0.0.1]");
-				return;
-			}
-			System.out.println("Connected to EmoComposer on [127.0.0.1]");
-			break;
-		}
-		default:
-			System.out.println("Invalid option...");
-			return;
-    	}
     	
 		Pointer hData = Edk.INSTANCE.EE_DataCreate();
 		Edk.INSTANCE.EE_DataSetBufferSizeInSec(secs);
-		System.out.print("Buffer size in secs: ");
-		System.out.println(secs);
-    		
-    	System.out.println("Start receiving EEG Data!");
+//END PROVIDED EMOTIV CODE 
+		
+    	System.out.println("Started receiving EEG Data!");
     	
-		
-    	//Setup the file for printing data to.
-		try {
-			out = new BufferedWriter(new FileWriter("data/" + fileName));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
 		//start the key listener
 		new Listener ("EEG Key Listener");
-		
-		while (true) 
+
+		while (collecting) 
 		{	
+//BEGIN PROVIDED EMOTIV CODE	
 			state = Edk.INSTANCE.EE_EngineGetNextEvent(eEvent);
 
 			// New event needs to be handled
@@ -110,21 +78,16 @@ public class RawData {
 					
 					Edk.INSTANCE.EE_EmoEngineEventGetEmoState(eEvent, eState);
 					
-					//get the contact quality
-					rval = EmoState.INSTANCE.ES_GetContactQualityFromAllChannels(eState, contactQuality, numChannels);
-					
 				}
 			}
 			else if (state != EdkErrorCode.EDK_NO_EVENT.ToInt()) {
-				System.out.println("Internal error in Emotiv Engine!");
+				System.err.println("Internal error in Emotiv Engine!");
 				break;
 			}
-			
-			
+//END PROVIDED EMOTIV CODE 
 			
 			if (readytocollect) 
 			{
-				
 				//get the data from device
 				Edk.INSTANCE.EE_DataUpdateHandle(0, hData);
 				Edk.INSTANCE.EE_DataGetNumberOfSample(hData, nSamplesTaken);
@@ -132,7 +95,6 @@ public class RawData {
 				if (nSamplesTaken != null)
 				{
 					if (nSamplesTaken.getValue() != 0) {
-						
 						double[] data = new double[nSamplesTaken.getValue()];
 						
 						for (int sampleIdx=0 ; sampleIdx < nSamplesTaken.getValue() ; ++sampleIdx) {
@@ -147,53 +109,36 @@ public class RawData {
 
 								Edk.INSTANCE.EE_DataGet(hData, i, data, nSamplesTaken.getValue());
 								
-								//Write the column data to the file
+								//Write the data columns to the file
 								out.write( Double.toString((data[sampleIdx])));
 								out.write(" ");
 							}
 							
-							//the contact quality columns
-							//The ordering of the array is consistent with the ordering of the logical input
+							//write key indicator column
+							out.write((keyPressed)? "1" : "0");
+							
+							//Print the contact quality columns to our file
+							//The ordering is consistent with the ordering of the logical input
 				    		//channels in EE_InputChannels_enum.
-							
-							
-							/*
-							 * Maybe a bug, but the API call wants in intbyreference, yet
-							 * I think we should be giving it an array. this makes no sense
-							for(int i = 0; i < numChannels; i++) {
-								out.write(contactQuality[0]); ?????????
-							}*/
-							
-							if (keyPressed) {
-								out.write("1");
-							} else {
-								out.write("0");
-							}
-							
 							for (int i = 1; i < 15 ; i++) {
-							
 								out.write(" " + EmoState.INSTANCE.ES_GetContactQuality(eState, i) + " ");
-							
 							}
 							
+							//next row
 							out.newLine();
 						}
 					}
 				}
 			}
-		}
-		//close all connections
+		} //end while
 		cleanUp();
-	
 	}
 
 
-	public static void cleanUp() throws IOException {
-		//close all connections
-		out.close();
+	public static void cleanUp() {
+		//close all connections;
 		Edk.INSTANCE.EE_EngineDisconnect();
 		Edk.INSTANCE.EE_EmoStateFree(eState);
 		Edk.INSTANCE.EE_EmoEngineEventFree(eEvent);
-		System.out.println("Disconnected!");
 	}
 }

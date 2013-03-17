@@ -1,4 +1,4 @@
-package Raw;
+package SDK;
 
 public enum EdkErrorCode {
 	 EDK_OK								(0x0000),

@@ -1,8 +1,9 @@
-package Raw;
+package Visualization;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
+
 
 public class Listener extends Frame implements KeyListener {
 
@@ -19,22 +20,19 @@ public class Listener extends Frame implements KeyListener {
 		addKeyListener(this);
 		setSize(200,100);
 		setVisible(true);
+
 		addWindowListener(new WindowAdapter(){
 			public void windowClosing(WindowEvent e){
-				try {
-					RawData.cleanUp();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				Data.collecting = false;
+				
 			}
 		});
 	}
 	
 	@Override
 	public void keyPressed(KeyEvent e) {
-		RawData.keyPressed = !RawData.keyPressed;
-		if(RawData.keyPressed) {
+		Data.keyPressed = !Data.keyPressed;
+		if(Data.keyPressed) {
 			l1.setText("Recording...");
 		} else {
 			l1.setText("Idle");
