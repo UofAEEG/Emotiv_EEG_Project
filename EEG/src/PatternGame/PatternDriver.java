@@ -2,10 +2,6 @@ package PatternGame;
 
 import javax.swing.JOptionPane;
 import javax.swing.JFrame;
-
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -50,7 +46,7 @@ public class PatternDriver extends JFrame {
 	private static int n = 10; //number of test data rounds
 	private static int trainingDuration = 10; //duration of training data in seconds
 	private static int testDuration = 1; //duration of test data in seconds
-	static BufferedWriter out = null;
+	
 	
 	private static String firstTrainingPattern = "Imagine a spinning ball inside the middle your head. This ball is rolling to towards the " +
 		    					  "left side of your head.\nFocus on the ball and follow its movement.\n" +
@@ -101,74 +97,93 @@ public class PatternDriver extends JFrame {
 	 */
 	public static void main(String[] args) {
 	
+		Matrix M = null; //handle for the matrices
+		
+		//the filename is the date
 		fileName = new SimpleDateFormat("yyyy-MM-dd-hh-mm").format(new Date());
 		
-		/*Initialize the text file we are printing to for the visualization data*/
+		//start the data collecting thread
+		DataCollector dc = new DataCollector("thread1", fileName);
+		
+		//wait for data to stabilize
+		System.out.println("Waiting 10 seconds for signals to stabalize...");
 		try {
-			out = new BufferedWriter(new FileWriter("data/" + fileName + ".txt"));
-		} catch (IOException e) {
+			Thread.sleep(3000); //TODO fix after testing
+		} catch (InterruptedException e) {
 			System.err.println(e.getMessage());
 			System.exit(-1);
 		}
 		
-		System.out.println("Waiting 10 seconds for signals to stabalize...");
-		DataCollector dc = new DataCollector();
-	    Matrix matrix = dc.collectData(new Matrix(trainingDuration), out);
-		
 		//Elicit pattern A
 		JOptionPane.showMessageDialog(null, firstTrainingPattern, "The first pattern", JOptionPane.PLAIN_MESSAGE);
-		
-		matrix = dc.collectData(new Matrix(trainingDuration), out);
-	    matrix.toFile(fileName, "BallRollingLeft");
-		
+		dc.setMatrix(trainingDuration);
+		while(dc.writingMatrix) {
+			//wait for the matrix to be written
+		}
+		M = dc.getMatrix();
+		M.toFile(fileName, "BallRollingLeft");
 		//Let the user take a break
 		JOptionPane.showMessageDialog(null, breakText, "It's break time!", JOptionPane.PLAIN_MESSAGE);
 		
 		//Elicit pattern B
 		JOptionPane.showMessageDialog(null, secondTrainingPattern,  "The second pattern", JOptionPane.PLAIN_MESSAGE);
-		
-		matrix = dc.collectData(new Matrix(trainingDuration), out);
-	    matrix.toFile(fileName, "BallRollingRight");
+		dc.setMatrix(trainingDuration);
+		while(dc.writingMatrix) {
+			//wait for the matrix to be written
+		}
+		M = dc.getMatrix();
+		M.toFile(fileName, "BallRollingRight");
 		
 	   //Let the user take a break
 	  	JOptionPane.showMessageDialog(null, breakText, "It's break time!", JOptionPane.PLAIN_MESSAGE);
 		
 		//elicit pattern C
 		JOptionPane.showMessageDialog(null, thirdTrainingPattern, "The third pattern", JOptionPane.PLAIN_MESSAGE);
+		dc.setMatrix(trainingDuration);
+		while(dc.writingMatrix) {
+			//wait for the matrix to be written
+		}
+		M = dc.getMatrix();
+		M.toFile(fileName, "BallFloatingUp");
 		
-		matrix = dc.collectData(new Matrix(trainingDuration), out);
-	    matrix.toFile(fileName, "BallFloatingUp");
-		
-		 //Let the user take a break
-		 JOptionPane.showMessageDialog(null, breakText, "It's break time!", JOptionPane.PLAIN_MESSAGE);
+	    //Let the user take a break
+		JOptionPane.showMessageDialog(null, breakText, "It's break time!", JOptionPane.PLAIN_MESSAGE);
 		
 		/*Elicit patterns n times*/
 		for(int i = 1; i <= n; i++) {
 			//Elicit pattern A
 			JOptionPane.showMessageDialog(null, firstTestPattern, "The first pattern", JOptionPane.PLAIN_MESSAGE);
 			
-			matrix = dc.collectData(new Matrix(testDuration), out);
-		    matrix.toFile(fileName, "BallRollingLeft_" + i);
+			dc.setMatrix(testDuration);
+			while(dc.writingMatrix) {
+				//wait for the matrix to be written
+			}
+			M = dc.getMatrix();
+			M.toFile(fileName, "BallRollingLeft_" + i);
 		    
 			 //Let the user take a break
 		  	JOptionPane.showMessageDialog(null, breakText, "It's break time!", JOptionPane.PLAIN_MESSAGE);
 		
 			//Elicit pattern B
-			JOptionPane.showMessageDialog(null, secondTestPattern,
-					"The second pattern", 
-				    JOptionPane.PLAIN_MESSAGE);
-			
-			matrix = dc.collectData(new Matrix(testDuration), out);
-		    matrix.toFile(fileName, "BallRollingRight_" + i);
+			JOptionPane.showMessageDialog(null, secondTestPattern, "The second pattern", JOptionPane.PLAIN_MESSAGE);
+			dc.setMatrix(testDuration);
+			while(dc.writingMatrix) {
+				//wait for the matrix to be written
+			}
+			M = dc.getMatrix();
+			M.toFile(fileName, "BallRollingRight_" + i);
 			
 			//Let the user take a break
 		  	JOptionPane.showMessageDialog(null, breakText, "It's break time!", JOptionPane.PLAIN_MESSAGE);
 			
 			//elicit pattern C
 			JOptionPane.showMessageDialog(null, thirdTestPattern, "The third pattern", JOptionPane.PLAIN_MESSAGE);
-			
-			matrix = dc.collectData(new Matrix(testDuration), out);
-		    matrix.toFile(fileName, "BallFloatingUp_" + i);
+			dc.setMatrix(testDuration);
+			while(dc.writingMatrix) {
+				//wait for the matrix to be written
+			}
+			M = dc.getMatrix();
+			M.toFile(fileName, "BallFloatingUp_" + i);
 			
 			//Let the user take a break unless they are done
 		    if(i != n) {
@@ -184,15 +199,15 @@ public class PatternDriver extends JFrame {
 		} //END for()
 		
 		
-		System.out.println("Exiting");
-		System.out.println("Output files are prefixed with the date " + fileName);
-		
-		//close up connections
-		dc.cleanUp();
+		//stop the thread and wait for it to exit
+		dc.collecting = false;
 		try {
-			out.close();
-		} catch (IOException e) {
+			dc.join();
+		} catch (InterruptedException e) {
 			System.err.println(e.getMessage());
+			System.exit(-1);
 		}
+		System.out.println("Output files are prefixed with the date " + fileName);
+		System.out.println("Exiting");
 	}
 }
