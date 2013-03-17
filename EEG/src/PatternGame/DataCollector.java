@@ -48,12 +48,6 @@ public class DataCollector {
 		if (state == EdkErrorCode.EDK_OK.ToInt()) {
 			int eventType = Edk.INSTANCE.EE_EmoEngineEventGetType(eEvent);
 			Edk.INSTANCE.EE_EmoEngineEventGetUserId(eEvent, userID);
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 			// Log the EmoState if it has been updated
 			if (eventType == Edk.EE_Event_t.EE_UserAdded.ToInt()) {
 					if (userID != null) {
