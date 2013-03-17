@@ -2,6 +2,10 @@ package PatternGame;
 
 import javax.swing.JOptionPane;
 import javax.swing.JFrame;
+
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -46,6 +50,44 @@ public class PatternDriver extends JFrame {
 	private static int n = 10; //number of test data rounds
 	private static int trainingDuration = 10; //duration of training data in seconds
 	private static int testDuration = 1; //duration of test data in seconds
+	static BufferedWriter out = null;
+	
+	private static String firstTrainingPattern = "Imagine a spinning ball inside the middle your head. This ball is rolling to towards the " +
+		    					  "left side of your head.\nFocus on the ball and follow its movement.\n" +
+		    					  "You will continue this thought for 10 seconds.\n" +
+		    					  "Click OK when you are ready to begin.";
+	
+	private static String secondTrainingPattern = "Imagine a spinning ball inside the middle your head. This ball is rolling to towards the " +
+		    								  "right side of your head.\nFocus on the ball and follow its movement.\n" +
+		    								  "You will continue this thought for 10 seconds.\n" +
+		    								  "Start thinking about the thought before you click." +
+		    								  "Click OK when you are ready to begin.";
+	
+	private static String thirdTrainingPattern = "Imagine a spinning ball inside the middle your head. This ball is flying up to towards the " +
+		    								 "top of your head.\nFocus on the ball and follow its movement.\n" +
+		    								 "You will continue this thought for 10 seconds.\n" +
+		    								 "Click OK when you are ready to begin.";
+	
+	private static String breakText = "Good Job. Take a short break before the next pattern.\n" +
+									  "Click Ok when you are ready to continue.";
+	
+	private static String firstTestPattern = "Imagine a spinning ball inside the middle your head. This ball is rolling to towards the " +
+		    								 "left side of your head.\nFocus on the ball and follow its movement.\n" +
+		    								 "You will continue this thought for 1 second.\n" +
+		    								 "Start thinking about the thought before you click." +
+		    								 "Click OK when you are ready to begin.";
+	
+	private static String secondTestPattern = 
+					"Imagine a spinning ball inside the middle your head. This ball is rolling to towards the " +
+				    "right side of your head.\nFocus on the ball and follow its movement.\n" +
+					"You will continue this thought for 1 second.\n" +
+					"Start thinking about the thought before you click." +
+				    "Click OK when you are ready to begin.";
+	
+	private static String thirdTestPattern = "Imagine a spinning ball inside the middle your head. This ball is flying up to towards the " +
+		    "top of your head.\nFocus on the ball and follow its movement.\n" +
+			"You will continue this thought for 10 seconds.\n" +
+		    "Click OK when you are ready to begin.";
 	
 	/*
 	 * May not be instanced
@@ -66,91 +108,45 @@ public class PatternDriver extends JFrame {
 	    Matrix matrix = dc.collectData(new Matrix(trainingDuration));
 		
 		//Elicit pattern A
-		JOptionPane.showMessageDialog(null, 
-				"Imagine a spinning ball inside the middle your head. This ball is rolling to towards the " +
-			    "left side of your head.\nFocus on the ball and follow its movement.\n" +
-				"You will continue this thought for 10 seconds.\n" +
-			    "Click OK when you are ready to begin.",
-				"The first pattern", 
-			    JOptionPane.PLAIN_MESSAGE);
+		JOptionPane.showMessageDialog(null, firstTrainingPattern, "The first pattern", JOptionPane.PLAIN_MESSAGE);
 		
 		matrix = dc.collectData(new Matrix(trainingDuration));
 	    matrix.toFile(fileName, "BallRollingLeft");
 		
 		//Let the user take a break
-		JOptionPane.showMessageDialog(null, 
-				"Good Job. Take a short break before the next pattern.\n" +
-				"Click Ok when you are ready to continue.",
-				"It's break time!", 
-			    JOptionPane.PLAIN_MESSAGE);
+		JOptionPane.showMessageDialog(null, breakText, "It's break time!", JOptionPane.PLAIN_MESSAGE);
 		
 		//Elicit pattern B
-		JOptionPane.showMessageDialog(null, 
-				"Imagine a spinning ball inside the middle your head. This ball is rolling to towards the " +
-			    "right side of your head.\nFocus on the ball and follow its movement.\n" +
-				"You will continue this thought for 10 seconds.\n" +
-			    "Click OK when you are ready to begin.",
-				"The second pattern", 
-			    JOptionPane.PLAIN_MESSAGE);
+		JOptionPane.showMessageDialog(null, secondTrainingPattern,  "The second pattern", JOptionPane.PLAIN_MESSAGE);
 		
 		matrix = dc.collectData(new Matrix(trainingDuration));
 	    matrix.toFile(fileName, "BallRollingRight");
 		
-		//Let the user take a break
-		JOptionPane.showMessageDialog(null, 
-				"Good Job. Take a short break before the next pattern.\n" +
-				"Click Ok when you are ready to continue.",
-				"It's break time!", 
-			    JOptionPane.PLAIN_MESSAGE);
+	   //Let the user take a break
+	  	JOptionPane.showMessageDialog(null, breakText, "It's break time!", JOptionPane.PLAIN_MESSAGE);
 		
 		//elicit pattern C
-		JOptionPane.showMessageDialog(null, 
-				"Imagine a spinning ball inside the middle your head. This ball is flying up to towards the " +
-			    "top of your head.\nFocus on the ball and follow its movement.\n" +
-				"You will continue this thought for 10 seconds.\n" +
-			    "Click OK when you are ready to begin.",
-				"The third pattern", 
-			    JOptionPane.PLAIN_MESSAGE);
+		JOptionPane.showMessageDialog(null, thirdTrainingPattern, "The third pattern", JOptionPane.PLAIN_MESSAGE);
 		
 		matrix = dc.collectData(new Matrix(trainingDuration));
 	    matrix.toFile(fileName, "BallFloatingUp");
 		
-		//Let the user take a break
-		JOptionPane.showMessageDialog(null, 
-				"Good Job. Take a short break before the next pattern.\n" +
-				"Click Ok when you are ready to continue.",
-				"It's break time!", 
-			    JOptionPane.PLAIN_MESSAGE);
+		 //Let the user take a break
+		 JOptionPane.showMessageDialog(null, breakText, "It's break time!", JOptionPane.PLAIN_MESSAGE);
 		
 		/*Elicit patterns n times*/
 		for(int i = 1; i <= n; i++) {
 			//Elicit pattern A
-			JOptionPane.showMessageDialog(null, 
-					"Imagine a spinning ball inside the middle your head. This ball is rolling to towards the " +
-				    "left side of your head.\nFocus on the ball and follow its movement.\n" +
-					"You will continue this thought for 1 second.\n" +
-				    "Start thinking about the thought before you click." +
-				    "Click OK when you are ready to begin.",
-					"The first pattern", 
-				    JOptionPane.PLAIN_MESSAGE);
+			JOptionPane.showMessageDialog(null, firstTestPattern, "The first pattern", JOptionPane.PLAIN_MESSAGE);
 			
 			matrix = dc.collectData(new Matrix(testDuration));
 		    matrix.toFile(fileName, "BallRollingLeft_" + i);
 		    
-		    //Let the user take a break
-			JOptionPane.showMessageDialog(null, 
-					"Good Job. Take a short break before the next pattern.\n" +
-					"Click Ok when you are ready to continue.",
-					"It's break time!", 
-				    JOptionPane.PLAIN_MESSAGE);
+			 //Let the user take a break
+		  	JOptionPane.showMessageDialog(null, breakText, "It's break time!", JOptionPane.PLAIN_MESSAGE);
 		
 			//Elicit pattern B
-			JOptionPane.showMessageDialog(null, 
-					"Imagine a spinning ball inside the middle your head. This ball is rolling to towards the " +
-				    "right side of your head.\nFocus on the ball and follow its movement.\n" +
-					"You will continue this thought for 1 second.\n" +
-					"Start thinking about the thought before you click." +
-				    "Click OK when you are ready to begin.",
+			JOptionPane.showMessageDialog(null, secondTestPattern,
 					"The second pattern", 
 				    JOptionPane.PLAIN_MESSAGE);
 			
@@ -158,31 +154,18 @@ public class PatternDriver extends JFrame {
 		    matrix.toFile(fileName, "BallRollingRight_" + i);
 			
 			//Let the user take a break
-			JOptionPane.showMessageDialog(null, 
-					"Good Job. Take a short break before the next pattern.\n" +
-					"Click Ok when you are ready to continue.",
-					"It's break time!", 
-				    JOptionPane.PLAIN_MESSAGE);
+		  	JOptionPane.showMessageDialog(null, breakText, "It's break time!", JOptionPane.PLAIN_MESSAGE);
 			
 			//elicit pattern C
-			JOptionPane.showMessageDialog(null, 
-					"Imagine a spinning ball inside the middle your head. This ball is flying up to towards the " +
-				    "top of your head.\nFocus on the ball and follow its movement.\n" +
-					"You will continue this thought for 10 seconds.\n" +
-				    "Click OK when you are ready to begin.",
-					"The third pattern", 
-				    JOptionPane.PLAIN_MESSAGE);
+			JOptionPane.showMessageDialog(null, thirdTestPattern, "The third pattern", JOptionPane.PLAIN_MESSAGE);
 			
 			matrix = dc.collectData(new Matrix(testDuration));
 		    matrix.toFile(fileName, "BallFloatingUp_" + i);
 			
 			//Let the user take a break unless they are done
 		    if(i != n) {
-				JOptionPane.showMessageDialog(null, 
-						"Good Job. Take a short break before the next pattern.\n" +
-						"Click Ok when you are ready to continue.",
-						"It's break time!", 
-					    JOptionPane.PLAIN_MESSAGE);
+		 	    //Let the user take a break
+			  	JOptionPane.showMessageDialog(null, breakText, "It's break time!", JOptionPane.PLAIN_MESSAGE);
 		    } else {
 		    	JOptionPane.showMessageDialog(null, 
 						"Thats it! You're done.\n" +
