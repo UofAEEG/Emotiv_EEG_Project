@@ -206,4 +206,20 @@ public class PatternDriver extends JFrame {
 		System.out.println("Output files are prefixed with the date " + fileName);
 		System.out.println("Exiting");
 	}
+
+	/*
+	 * Takes as input a matrix of size 128*14*T1
+	 * Preforms a sliding window operation to form a test data matrix
+	 * 
+	 * loops through the matrix taking sample sizes of 128*14*t2
+	 * there will be (n-1) samples of this size which will
+	 * make 3*128*(t-1) rows of the test data matrix
+	 * 
+	 * Confusing, clear this up. should i take only one matric and output another, or should i take all
+	 * 3 matrices and output a big one ?
+	 */
+	private void slidingWindow(Matrix x) {
+	    
+	}
+
 }
