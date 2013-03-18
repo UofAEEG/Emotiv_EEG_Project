@@ -13,6 +13,13 @@ import java.util.Date;
 /*  NOTES:
  *  This program does not do the "check quality or exit" feature, as I think this is unnecessary since we visually
  *  confirm connection quality before running the program
+ *  
+ *  
+ *  http://stackoverflow.com/questions/7433073/how-to-write-into-and-read-from-command-line-in-java
+ *  
+ *  Runtime runtime = Runtime.getRuntime();
+Process process = runtime.exec("ipconfig"); // you might need the full path
+ *  
  */
 
 /*
