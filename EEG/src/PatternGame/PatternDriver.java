@@ -43,8 +43,8 @@ public class PatternDriver extends JFrame {
 	
 	private static final long serialVersionUID = 1L;
 	private static String fileName = null;
-	private static int n = 10; //number of test data rounds
-	private static int trainingDuration = 10; //duration of training data in seconds
+	private static int n = 2; //number of test data rounds
+	private static int trainingDuration = 1; //duration of training data in seconds
 	private static int testDuration = 1; //duration of test data in seconds
 	
 	
@@ -117,8 +117,8 @@ public class PatternDriver extends JFrame {
 		//Elicit pattern A
 		JOptionPane.showMessageDialog(null, firstTrainingPattern, "The first pattern", JOptionPane.PLAIN_MESSAGE);
 		dc.setMatrix(trainingDuration);
-		while(dc.writingMatrix) {
-			//wait for the matrix to be written
+		while(dc.writingMatrix.get()) {
+			Thread.yield();//wait for the matrix to be written
 		}
 		M = dc.getMatrix();
 		M.toFile(fileName, "BallRollingLeft");
@@ -128,8 +128,8 @@ public class PatternDriver extends JFrame {
 		//Elicit pattern B
 		JOptionPane.showMessageDialog(null, secondTrainingPattern,  "The second pattern", JOptionPane.PLAIN_MESSAGE);
 		dc.setMatrix(trainingDuration);
-		while(dc.writingMatrix) {
-			//wait for the matrix to be written
+		while(dc.writingMatrix.get()) {
+			Thread.yield();//wait for the matrix to be written
 		}
 		M = dc.getMatrix();
 		M.toFile(fileName, "BallRollingRight");
@@ -140,8 +140,8 @@ public class PatternDriver extends JFrame {
 		//elicit pattern C
 		JOptionPane.showMessageDialog(null, thirdTrainingPattern, "The third pattern", JOptionPane.PLAIN_MESSAGE);
 		dc.setMatrix(trainingDuration);
-		while(dc.writingMatrix) {
-			//wait for the matrix to be written
+		while(dc.writingMatrix.get()) {
+			Thread.yield();//wait for the matrix to be written
 		}
 		M = dc.getMatrix();
 		M.toFile(fileName, "BallFloatingUp");
@@ -155,8 +155,8 @@ public class PatternDriver extends JFrame {
 			JOptionPane.showMessageDialog(null, firstTestPattern, "The first pattern", JOptionPane.PLAIN_MESSAGE);
 			
 			dc.setMatrix(testDuration);
-			while(dc.writingMatrix) {
-				//wait for the matrix to be written
+			while(dc.writingMatrix.get()) {
+				Thread.yield();//wait for the matrix to be written
 			}
 			M = dc.getMatrix();
 			M.toFile(fileName, "BallRollingLeft_" + i);
@@ -167,8 +167,8 @@ public class PatternDriver extends JFrame {
 			//Elicit pattern B
 			JOptionPane.showMessageDialog(null, secondTestPattern, "The second pattern", JOptionPane.PLAIN_MESSAGE);
 			dc.setMatrix(testDuration);
-			while(dc.writingMatrix) {
-				//wait for the matrix to be written
+			while(dc.writingMatrix.get()) {
+				Thread.yield();//wait for the matrix to be written
 			}
 			M = dc.getMatrix();
 			M.toFile(fileName, "BallRollingRight_" + i);
@@ -179,8 +179,8 @@ public class PatternDriver extends JFrame {
 			//elicit pattern C
 			JOptionPane.showMessageDialog(null, thirdTestPattern, "The third pattern", JOptionPane.PLAIN_MESSAGE);
 			dc.setMatrix(testDuration);
-			while(dc.writingMatrix) {
-				//wait for the matrix to be written
+			while(dc.writingMatrix.get()) {
+				Thread.yield();//wait for the matrix to be written
 			}
 			M = dc.getMatrix();
 			M.toFile(fileName, "BallFloatingUp_" + i);

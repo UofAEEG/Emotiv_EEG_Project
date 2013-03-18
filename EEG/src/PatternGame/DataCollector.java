@@ -3,6 +3,7 @@ package PatternGame;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import SDK.Edk;
 import SDK.EdkErrorCode;
@@ -23,7 +24,7 @@ public class DataCollector extends Thread {
 	private Pointer eEvent = null;
 	private BufferedWriter out = null;
 	public boolean collecting;
-	public boolean writingMatrix;
+	public AtomicBoolean writingMatrix;
 	private Matrix matrix;
 	private int sample;
 	
@@ -53,7 +54,7 @@ public class DataCollector extends Thread {
     	float secs 					= 60;
     	boolean readytocollect 		= false;
     	collecting = true;
-    	writingMatrix = false;
+    	writingMatrix = new AtomicBoolean(false);
     	userID 			= new IntByReference(0);
 		nSamplesTaken	= new IntByReference(0);
 		
@@ -123,11 +124,11 @@ public class DataCollector extends Thread {
 									
 									Edk.INSTANCE.EE_DataGet(hData, i, data, nSamplesTaken.getValue());
 									
-									if ( writingMatrix && i >= 3 && i <= 16) {
+									if ( writingMatrix.get() && i >= 3 && i <= 16) {
 										try {
 											matrix.matrix[sample][i-3] = data[sampleIdx];
 										} catch (ArrayIndexOutOfBoundsException e) {
-											writingMatrix = false;
+											writingMatrix.set(false);
 										}
 									}
 									
@@ -137,11 +138,11 @@ public class DataCollector extends Thread {
 								}
 								
 								//increment the sample
-								if(writingMatrix)
+								if(writingMatrix.get())
 									sample++;
 								
 								//write key indicator column
-								out.write((writingMatrix)? "1" : "0");
+								out.write((writingMatrix.get())? "1" : "0");
 								
 								//Print the contact quality columns to our file
 								//The ordering is consistent with the ordering of the logical input
@@ -171,7 +172,8 @@ public class DataCollector extends Thread {
 	public void setMatrix(int seconds) {
 		this.matrix = new Matrix(seconds);
 		this.sample = 0;
-		this.writingMatrix = true;
+		//atomic set to true
+		while (!this.writingMatrix.compareAndSet(false, true));
 	}
 	
 	/*
