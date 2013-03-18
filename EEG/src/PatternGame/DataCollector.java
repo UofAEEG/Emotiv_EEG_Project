@@ -141,7 +141,7 @@ public class DataCollector extends Thread {
 									sample++;
 								
 								//write key indicator column
-								out.write("0");
+								out.write((writingMatrix)? "1" : "0");
 								
 								//Print the contact quality columns to our file
 								//The ordering is consistent with the ordering of the logical input
