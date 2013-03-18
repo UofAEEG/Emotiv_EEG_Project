@@ -10,18 +10,6 @@ import java.util.Date;
  *  This program does not record randomly selected 1 second long intervals of the break
  */
 
-/*  NOTES:
- *  This program does not do the "check quality or exit" feature, as I think this is unnecessary since we visually
- *  confirm connection quality before running the program
- *  
- *  
- *  http://stackoverflow.com/questions/7433073/how-to-write-into-and-read-from-command-line-in-java
- *  
- *  Runtime runtime = Runtime.getRuntime();
-Process process = runtime.exec("ipconfig"); // you might need the full path
- *  
- */
-
 /*
  * The pattern game
  * 
@@ -51,8 +39,9 @@ public class PatternDriver extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private static String fileName = null;
 	private static int n = 2; //number of test data rounds
-	private static int trainingDuration = 1; //duration of training data in seconds
-	private static int testDuration = 1; //duration of test data in seconds
+	private static int t = 10;
+	private static int T2 = 1; //duration of test data in seconds
+	private static int T1 = t * T2; //duration of training data in seconds
 	
 	
 	private static String firstTrainingPattern = "Imagine a spinning ball inside the middle your head. This ball is rolling to towards the " +
@@ -123,7 +112,7 @@ public class PatternDriver extends JFrame {
 		
 		//Elicit pattern A
 		JOptionPane.showMessageDialog(null, firstTrainingPattern, "The first pattern", JOptionPane.PLAIN_MESSAGE);
-		dc.setMatrix(trainingDuration);
+		dc.setMatrix(T1);
 		while(dc.writingMatrix.get()) {
 			Thread.yield();//wait for the matrix to be written
 		}
@@ -134,7 +123,7 @@ public class PatternDriver extends JFrame {
 		
 		//Elicit pattern B
 		JOptionPane.showMessageDialog(null, secondTrainingPattern,  "The second pattern", JOptionPane.PLAIN_MESSAGE);
-		dc.setMatrix(trainingDuration);
+		dc.setMatrix(T1);
 		while(dc.writingMatrix.get()) {
 			Thread.yield();//wait for the matrix to be written
 		}
@@ -146,7 +135,7 @@ public class PatternDriver extends JFrame {
 		
 		//elicit pattern C
 		JOptionPane.showMessageDialog(null, thirdTrainingPattern, "The third pattern", JOptionPane.PLAIN_MESSAGE);
-		dc.setMatrix(trainingDuration);
+		dc.setMatrix(T1);
 		while(dc.writingMatrix.get()) {
 			Thread.yield();//wait for the matrix to be written
 		}
@@ -161,7 +150,7 @@ public class PatternDriver extends JFrame {
 			//Elicit pattern A
 			JOptionPane.showMessageDialog(null, firstTestPattern, "The first pattern", JOptionPane.PLAIN_MESSAGE);
 			
-			dc.setMatrix(testDuration);
+			dc.setMatrix(T2);
 			while(dc.writingMatrix.get()) {
 				Thread.yield();//wait for the matrix to be written
 			}
@@ -173,7 +162,7 @@ public class PatternDriver extends JFrame {
 		
 			//Elicit pattern B
 			JOptionPane.showMessageDialog(null, secondTestPattern, "The second pattern", JOptionPane.PLAIN_MESSAGE);
-			dc.setMatrix(testDuration);
+			dc.setMatrix(T2);
 			while(dc.writingMatrix.get()) {
 				Thread.yield();//wait for the matrix to be written
 			}
@@ -185,7 +174,7 @@ public class PatternDriver extends JFrame {
 			
 			//elicit pattern C
 			JOptionPane.showMessageDialog(null, thirdTestPattern, "The third pattern", JOptionPane.PLAIN_MESSAGE);
-			dc.setMatrix(testDuration);
+			dc.setMatrix(T2);
 			while(dc.writingMatrix.get()) {
 				Thread.yield();//wait for the matrix to be written
 			}
