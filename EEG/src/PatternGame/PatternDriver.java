@@ -95,6 +95,8 @@ public class PatternDriver extends JFrame {
 	
 		Matrix M = null; //handle for the matrices
 		
+		String matrixFilename;
+		
 		//the filename is the date
 		fileName = new SimpleDateFormat("yyyy-MM-dd-hh-mm").format(new Date());
 		
@@ -118,10 +120,10 @@ public class PatternDriver extends JFrame {
 			Thread.yield();//wait for the matrix to be written
 		}
 		M = dc.getMatrix();
-		String matrixFilename = M.toFile(fileName, "BallRollingLeft");
+		matrixFilename = M.toFile(fileName, "BallRollingLeft");
 		// svm generation test
-		SvmMatrix svm = new SvmMatrix(matrixFilename,T1,T2);
-		svm.generateSVM();
+		SvmMatrix svm1 = new SvmMatrix(matrixFilename,T1,T2);
+		svm1.generateSVM();
 		
 		//Let the user take a break
 		JOptionPane.showMessageDialog(null, breakText, "It's break time!", JOptionPane.PLAIN_MESSAGE);
@@ -133,7 +135,9 @@ public class PatternDriver extends JFrame {
 			Thread.yield();//wait for the matrix to be written
 		}
 		M = dc.getMatrix();
-		M.toFile(fileName, "BallRollingRight");
+		matrixFilename = M.toFile(fileName, "BallRollingRight");
+		SvmMatrix svm2 = new SvmMatrix(matrixFilename,T1,T2);
+		svm2.generateSVM();
 		
 	   //Let the user take a break
 	  	JOptionPane.showMessageDialog(null, breakText, "It's break time!", JOptionPane.PLAIN_MESSAGE);
@@ -145,7 +149,14 @@ public class PatternDriver extends JFrame {
 			Thread.yield();//wait for the matrix to be written
 		}
 		M = dc.getMatrix();
-		M.toFile(fileName, "BallFloatingUp");
+		matrixFilename = M.toFile(fileName, "BallFloatingUp");
+		SvmMatrix svm3 = new SvmMatrix(matrixFilename,T1,T2);
+		svm3.generateSVM();
+		
+		CombineSvmMatrix svm = new CombineSvmMatrix(svm1,svm2,svm3);
+		svm1 = null; svm2 = null; svm3 = null; // don't need these anymore
+		
+		svm.svmout();
 		
 	    //Let the user take a break
 		JOptionPane.showMessageDialog(null, breakText, "It's break time!", JOptionPane.PLAIN_MESSAGE);
