@@ -103,6 +103,7 @@ public class PatternDriver extends JFrame {
 		
 		//wait for data to stabilize
 		System.out.println("Waiting 10 seconds for signals to stabalize...");
+		
 		try {
 			Thread.sleep(10000);
 		} catch (InterruptedException e) {
@@ -117,7 +118,11 @@ public class PatternDriver extends JFrame {
 			Thread.yield();//wait for the matrix to be written
 		}
 		M = dc.getMatrix();
-		M.toFile(fileName, "BallRollingLeft");
+		String matrixFilename = M.toFile(fileName, "BallRollingLeft");
+		// svm generation test
+		SvmMatrix svm = new SvmMatrix(matrixFilename,T1,T2);
+		svm.generateSVM();
+		
 		//Let the user take a break
 		JOptionPane.showMessageDialog(null, breakText, "It's break time!", JOptionPane.PLAIN_MESSAGE);
 		
