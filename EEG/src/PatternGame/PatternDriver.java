@@ -1,7 +1,19 @@
 package PatternGame;
 
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JWindow;
+import javax.swing.SwingConstants;
+import javax.swing.border.LineBorder;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import java.awt.Toolkit;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -42,7 +54,9 @@ public class PatternDriver extends JFrame {
 	private static int t = 10;
 	private static int T2 = 1; //duration of test data in seconds
 	private static int T1 = t * T2; //duration of training data in seconds
+	private static int breakTime = 10;
 	
+	private static JWindow window;
 	
 	private static String firstTrainingPattern = "Imagine a spinning ball inside the middle your head. This ball is rolling to towards the " +
 		    					  "left side of your head.\nFocus on the ball and follow its movement.\n" +
@@ -81,6 +95,8 @@ public class PatternDriver extends JFrame {
 			"You will continue this thought for 10 seconds.\n" +
 		    "Click OK when you are ready to begin.";
 	
+	private static String relaxText = "Good Job. Press Ok and take a 10 second break.";
+	
 	/*
 	 * May not be instanced
 	 */
@@ -95,6 +111,7 @@ public class PatternDriver extends JFrame {
 	
 		Matrix M = null; //handle for the matrices
 		
+		// file name of matrices
 		String matrixFilename;
 		
 		//the filename is the date
@@ -102,6 +119,9 @@ public class PatternDriver extends JFrame {
 		
 		//start the data collecting thread
 		DataCollector dc = new DataCollector("thread1", fileName);
+		
+		//sets up break window
+		setupLoadingWindow();
 		
 		//wait for data to stabilize
 		System.out.println("Waiting 10 seconds for signals to stabalize...");
@@ -156,7 +176,11 @@ public class PatternDriver extends JFrame {
 		CombineSvmMatrix svm = new CombineSvmMatrix(svm1,svm2,svm3);
 		svm1 = null; svm2 = null; svm3 = null; // don't need these anymore
 		
-		svm.svmout();
+		// only if you need to output the matrix
+		svm.svmout(fileName);
+		
+		// don't need svm anymore
+		svm = null;
 		
 	    //Let the user take a break
 		JOptionPane.showMessageDialog(null, breakText, "It's break time!", JOptionPane.PLAIN_MESSAGE);
@@ -174,8 +198,20 @@ public class PatternDriver extends JFrame {
 			M.toFile(fileName, "BallRollingLeft_" + i);
 		    
 			 //Let the user take a break
-		  	JOptionPane.showMessageDialog(null, breakText, "It's break time!", JOptionPane.PLAIN_MESSAGE);
-		
+		  	JOptionPane.showMessageDialog(null, relaxText, "It's break time!", JOptionPane.PLAIN_MESSAGE);
+			
+            window.setVisible(true);
+            dc.setMatrix(breakTime);
+            while (dc.writingMatrix.get()) {
+            	Thread.yield();
+            }
+            M = dc.getMatrix();
+            matrixFilename = M.toFile(fileName, "Break_10sec_BallRollingLeft_" + i);
+            MiddleMatrixChunk mmc1 = new MiddleMatrixChunk(matrixFilename,breakTime);
+            mmc1.generateChunk();
+            mmc1.chunkout();
+            window.setVisible(false);
+			
 			//Elicit pattern B
 			JOptionPane.showMessageDialog(null, secondTestPattern, "The second pattern", JOptionPane.PLAIN_MESSAGE);
 			dc.setMatrix(T2);
@@ -186,7 +222,19 @@ public class PatternDriver extends JFrame {
 			M.toFile(fileName, "BallRollingRight_" + i);
 			
 			//Let the user take a break
-		  	JOptionPane.showMessageDialog(null, breakText, "It's break time!", JOptionPane.PLAIN_MESSAGE);
+		  	JOptionPane.showMessageDialog(null, relaxText, "It's break time!", JOptionPane.PLAIN_MESSAGE);
+            window.setVisible(true);
+            dc.setMatrix(breakTime);
+            while (dc.writingMatrix.get()) {
+            	Thread.yield();
+            }
+            M = dc.getMatrix();
+            matrixFilename = M.toFile(fileName, "Break_10sec_BallRollingRight_" + i);
+            MiddleMatrixChunk mmc2 = new MiddleMatrixChunk(matrixFilename,breakTime);
+            mmc2.generateChunk();
+            mmc2.chunkout();
+            window.setVisible(false);
+			
 			
 			//elicit pattern C
 			JOptionPane.showMessageDialog(null, thirdTestPattern, "The third pattern", JOptionPane.PLAIN_MESSAGE);
@@ -197,17 +245,40 @@ public class PatternDriver extends JFrame {
 			M = dc.getMatrix();
 			M.toFile(fileName, "BallFloatingUp_" + i);
 			
+			JOptionPane.showMessageDialog(null, relaxText, "It's break time!", JOptionPane.PLAIN_MESSAGE);
+			window.setVisible(true);
+            dc.setMatrix(breakTime);
+            while (dc.writingMatrix.get()) {
+            	Thread.yield();
+            }
+            M = dc.getMatrix();
+            matrixFilename = M.toFile(fileName, "Break_10sec_BallFloatingUp_" + i);
+            MiddleMatrixChunk mmc3 = new MiddleMatrixChunk(matrixFilename,breakTime);
+            mmc3.generateChunk();
+            mmc3.chunkout();
+            window.setVisible(false);
+			
+            if (i == n) {
+            	JOptionPane.showMessageDialog(null, 
+						"Thats it! You're done.\n" +
+						"Sorry, you didn't win the prize.\nPlease play again",
+						"You're done!", 
+					    JOptionPane.PLAIN_MESSAGE);
+            }
+            
+            /*
 			//Let the user take a break unless they are done
 		    if(i != n) {
 		 	    //Let the user take a break
-			  	JOptionPane.showMessageDialog(null, breakText, "It's break time!", JOptionPane.PLAIN_MESSAGE);
+			  	JOptionPane.showMessageDialog(null, relaxText, "It's break time!", JOptionPane.PLAIN_MESSAGE);
+		    	
 		    } else {
 		    	JOptionPane.showMessageDialog(null, 
 						"Thats it! You're done.\n" +
 						"Sorry, you didn't win the prize.\nPlease play again",
 						"You're done!", 
 					    JOptionPane.PLAIN_MESSAGE);
-		    }
+		    }*/
 		} //END for()
 		
 		
@@ -238,4 +309,16 @@ public class PatternDriver extends JFrame {
 	    
 	}
 
+	private static void setupLoadingWindow() {
+		window = new JWindow();
+	  	JPanel pan = new JPanel();
+	  	pan.setBorder(new LineBorder(Color.BLACK));
+	  	pan.setLayout(new GridLayout(1,1));
+	  	pan.add(new JLabel("Please rest for 10 seconds..."));
+	  	
+	  	window.getContentPane().add(pan,"Center");
+	  	window.setSize(200,100);
+	  	window.setLocationRelativeTo(null);
+	}
+	
 }
