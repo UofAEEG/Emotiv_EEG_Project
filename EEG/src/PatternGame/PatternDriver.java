@@ -50,7 +50,7 @@ public class PatternDriver extends JFrame {
 	
 	private static final long serialVersionUID = 1L;
 	private static String fileName = null;
-	private static int n = 2; //number of test data rounds
+	private static int n = 10; //number of test data rounds
 	private static int t = 10;
 	private static int T2 = 1; //duration of test data in seconds
 	private static int T1 = t * T2; //duration of training data in seconds
@@ -120,6 +120,8 @@ public class PatternDriver extends JFrame {
 		//start the data collecting thread
 		DataCollector dc = new DataCollector("thread1", fileName);
 		
+		DataCollector dc_separate = null;
+		
 		//sets up break window
 		setupLoadingWindow();
 		
@@ -136,9 +138,11 @@ public class PatternDriver extends JFrame {
 		//Elicit pattern A
 		JOptionPane.showMessageDialog(null, firstTrainingPattern, "The first pattern", JOptionPane.PLAIN_MESSAGE);
 		dc.setMatrix(T1);
+		dc_separate = new DataCollector("thread_data", fileName + "_BallRollingLeft");
 		while(dc.writingMatrix.get()) {
 			Thread.yield();//wait for the matrix to be written
 		}
+		dc_separate = null;
 		M = dc.getMatrix();
 		matrixFilename = M.toFile(fileName, "BallRollingLeft");
 		// svm generation test
@@ -151,9 +155,11 @@ public class PatternDriver extends JFrame {
 		//Elicit pattern B
 		JOptionPane.showMessageDialog(null, secondTrainingPattern,  "The second pattern", JOptionPane.PLAIN_MESSAGE);
 		dc.setMatrix(T1);
+		dc_separate = new DataCollector("thread_data", fileName + "_BallRollingRight");
 		while(dc.writingMatrix.get()) {
 			Thread.yield();//wait for the matrix to be written
 		}
+		dc_separate = null;
 		M = dc.getMatrix();
 		matrixFilename = M.toFile(fileName, "BallRollingRight");
 		SvmMatrix svm2 = new SvmMatrix(matrixFilename,T1,T2);
@@ -165,9 +171,11 @@ public class PatternDriver extends JFrame {
 		//elicit pattern C
 		JOptionPane.showMessageDialog(null, thirdTrainingPattern, "The third pattern", JOptionPane.PLAIN_MESSAGE);
 		dc.setMatrix(T1);
+		dc_separate = new DataCollector("thread_data", fileName + "_BallFloatingUp");
 		while(dc.writingMatrix.get()) {
 			Thread.yield();//wait for the matrix to be written
 		}
+		dc_separate = null;
 		M = dc.getMatrix();
 		matrixFilename = M.toFile(fileName, "BallFloatingUp");
 		SvmMatrix svm3 = new SvmMatrix(matrixFilename,T1,T2);
@@ -191,9 +199,11 @@ public class PatternDriver extends JFrame {
 			JOptionPane.showMessageDialog(null, firstTestPattern, "The first pattern", JOptionPane.PLAIN_MESSAGE);
 			
 			dc.setMatrix(T2);
+			dc_separate = new DataCollector("thread_data", fileName + "_BallRollingLeft_"+i);
 			while(dc.writingMatrix.get()) {
 				Thread.yield();//wait for the matrix to be written
 			}
+			dc_separate = null;                                                                            
 			M = dc.getMatrix();
 			M.toFile(fileName, "BallRollingLeft_" + i);
 		    
@@ -202,9 +212,11 @@ public class PatternDriver extends JFrame {
 			
             window.setVisible(true);
             dc.setMatrix(breakTime);
+            dc_separate = new DataCollector("thread_data", fileName + "_Break_10sec_BallRollingLeft_" + i);
             while (dc.writingMatrix.get()) {
             	Thread.yield();
             }
+            dc_separate = null;
             M = dc.getMatrix();
             matrixFilename = M.toFile(fileName, "Break_10sec_BallRollingLeft_" + i);
             MiddleMatrixChunk mmc1 = new MiddleMatrixChunk(matrixFilename,breakTime);
@@ -215,9 +227,11 @@ public class PatternDriver extends JFrame {
 			//Elicit pattern B
 			JOptionPane.showMessageDialog(null, secondTestPattern, "The second pattern", JOptionPane.PLAIN_MESSAGE);
 			dc.setMatrix(T2);
+			dc_separate = new DataCollector("thread_data", fileName + "_BallRollingRight_" + i);
 			while(dc.writingMatrix.get()) {
 				Thread.yield();//wait for the matrix to be written
 			}
+			dc_separate = null;
 			M = dc.getMatrix();
 			M.toFile(fileName, "BallRollingRight_" + i);
 			
@@ -225,9 +239,11 @@ public class PatternDriver extends JFrame {
 		  	JOptionPane.showMessageDialog(null, relaxText, "It's break time!", JOptionPane.PLAIN_MESSAGE);
             window.setVisible(true);
             dc.setMatrix(breakTime);
+            dc_separate = new DataCollector("thread_data", fileName + "_Break_10sec_BallRollingRight_" + i);
             while (dc.writingMatrix.get()) {
             	Thread.yield();
             }
+            dc_separate = null;
             M = dc.getMatrix();
             matrixFilename = M.toFile(fileName, "Break_10sec_BallRollingRight_" + i);
             MiddleMatrixChunk mmc2 = new MiddleMatrixChunk(matrixFilename,breakTime);
@@ -239,18 +255,22 @@ public class PatternDriver extends JFrame {
 			//elicit pattern C
 			JOptionPane.showMessageDialog(null, thirdTestPattern, "The third pattern", JOptionPane.PLAIN_MESSAGE);
 			dc.setMatrix(T2);
+			dc_separate = new DataCollector("thread_data", fileName + "_BallFloatingUp_" + i);
 			while(dc.writingMatrix.get()) {
 				Thread.yield();//wait for the matrix to be written
 			}
+			dc_separate = null;
 			M = dc.getMatrix();
 			M.toFile(fileName, "BallFloatingUp_" + i);
 			
 			JOptionPane.showMessageDialog(null, relaxText, "It's break time!", JOptionPane.PLAIN_MESSAGE);
 			window.setVisible(true);
             dc.setMatrix(breakTime);
+            dc_separate = new DataCollector("thread_data", fileName + "_Break_10sec_BallFloatingUp_" + i);
             while (dc.writingMatrix.get()) {
             	Thread.yield();
             }
+            dc_separate = null;
             M = dc.getMatrix();
             matrixFilename = M.toFile(fileName, "Break_10sec_BallFloatingUp_" + i);
             MiddleMatrixChunk mmc3 = new MiddleMatrixChunk(matrixFilename,breakTime);

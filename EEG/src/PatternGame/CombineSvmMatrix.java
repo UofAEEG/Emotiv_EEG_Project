@@ -104,4 +104,25 @@ public class CombineSvmMatrix {
 			System.exit(-1);
 		}
 	}
+	
+	public void svmlabelout(String filename) {
+
+		BufferedWriter writer = null;
+
+		try {
+			writer = new BufferedWriter(new FileWriter("Svm/SVM_Label_Matrix_"+filename+".txt"));
+
+			
+			for (int i=0; i<totalrow; i++) {
+				writer.write(svmLabel[i] + " "); 
+				writer.newLine();
+			}
+
+			writer.flush();
+			writer.close();
+		} catch (IOException e) {
+			System.err.println(e.getMessage());
+			System.exit(-1);
+		}
+	}
 }

@@ -1,5 +1,5 @@
 package PatternGame;
-
+/*
 import libsvm.*;
 
 public class svmModel extends svm {
@@ -7,7 +7,7 @@ public class svmModel extends svm {
 	public svm_problem problem;
 	public svm_parameter parameters;
 	public svm_model model;
-	
+*/	
 
 /*  This is is copied from the official SVM documentation
  * 	svm_type can be one of C_SVC, NU_SVC, ONE_CLASS, EPSILON_SVR, NU_SVR.
@@ -47,6 +47,8 @@ public class svmModel extends svm {
     If you do not want to change penalty for any of the classes,
     just set nr_weight to 0.
     */
+
+/*
 	public svmModel() {
 		super();
 		this.problem = new svm_problem();
@@ -82,6 +84,7 @@ public class svmModel extends svm {
 		
 		return decisionValues;
 	}
+*/
 /*	The format of training and testing data file is:
 
 		<label> <index1>:<value1> <index2>:<value2> ...
@@ -91,7 +94,7 @@ public class svmModel extends svm {
 		
 	Gonna use this private method to convert provide matrices to training data*/
 
-	
+/*	
 	private svm_node[]  convertMatrix(){
 		svm_node[] data = null;
 		return data;
@@ -99,3 +102,4 @@ public class svmModel extends svm {
 	
 
 }
+*/
