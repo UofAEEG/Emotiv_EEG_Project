@@ -1,13 +1,20 @@
 package PatternGame;
-/*
+
 import libsvm.*;
 
+/**
+ * @author Bing
+ *
+ */
 public class svmModel extends svm {
 	
 	public svm_problem problem;
 	public svm_parameter parameters;
 	public svm_model model;
-*/	
+	public int sample_size;
+	public static int framespersecond = 128;
+	
+	
 
 /*  This is is copied from the official SVM documentation
  * 	svm_type can be one of C_SVC, NU_SVC, ONE_CLASS, EPSILON_SVR, NU_SVR.
@@ -47,14 +54,12 @@ public class svmModel extends svm {
     If you do not want to change penalty for any of the classes,
     just set nr_weight to 0.
     */
-
-/*
+	/**
+	 * 
+	 */
 	public svmModel() {
 		super();
 		this.problem = new svm_problem();
-		problem.l = 1;
-		problem.y = new double[0];
-		problem.x = new svm_node[0][0];
 		
 		this.parameters = new svm_parameter();
 		parameters.svm_type = svm_parameter.C_SVC;
@@ -68,23 +73,88 @@ public class svmModel extends svm {
 		parameters.C = 0;
 		parameters.nr_weight = 0;
 		parameters.shrinking = 0;
-		parameters.probability = 0;
+		parameters.probability = 1;
 		
 		System.err.println(svm.svm_check_parameter(problem, parameters));
 		
-		this.convertMatrix();
+		this.model = null;
 		
-		this.model = svm.svm_train(problem, parameters);
+		this.sample_size = 1;
 	}
 	
-	public double[] predictPattern(svm_node[] testingData)
+	/**
+	 * This method only takes in a 1-second sample of 128 frames as an array of doubles
+	 * @param input
+	 * @return a list of probabilities 
+	 */
+	public double[] predict(double[] input)
 	{
-		double[] decisionValues = null;
-		svm_predict_values(model, testingData, decisionValues);
+		int [] labels = null;
+		svm_get_labels(model, labels);
+		if ( model == null || labels.length == 0) // if model doesn't exist or there are no classes
+		{
+			System.out.println("Invalid Model");
+		}
 		
-		return decisionValues;
+		if (svm_check_probability_model(model) == 0) // if probability is not enabled
+		{
+			System.out.println("Model cannot make probability estitames, please check model parameters");
+			return null;
+		}
+
+		svm_node[] testData = new svm_node[input.length];
+		double[] probabilities = new double[labels.length];
+	
+		
+		for (int i = 0; i < input.length; i++)
+		{
+			testData[i].index = i + 1;
+			testData[i].value = input[i];
+		}
+		
+		svm_predict_values(model, testData, probabilities);
+		
+		
+		return probabilities;
 	}
-*/
+	
+	/**
+	 * Use this method to create the model
+	 * Can use prediction after the model is created
+	 * @param a CombineSvmMatrix object
+	 */
+	public void train(CombineSvmMatrix input){
+		if (model != null)
+		{
+			System.out.println("There is an existing model");
+		}
+		this.problem.l = input.row;
+		this.problem.y = input.svmLabel;
+		this.problem.x = convertMatrix(input);
+		
+		this.model = svm_train(problem, parameters);
+		
+		if ( this.model != null ){
+			System.out.println("Training successful");
+		}
+		else
+		{
+			System.err.println("Training failed, please verify model parameters and training data!");
+		}
+		
+		
+	}
+	
+	/**
+	 * @param a CombineSvmMatrix object
+	 */
+	public void retrain(CombineSvmMatrix input)
+	{
+		model = null;
+		problem = null;
+		this.train(input);
+	}
+	
 /*	The format of training and testing data file is:
 
 		<label> <index1>:<value1> <index2>:<value2> ...
@@ -92,14 +162,26 @@ public class svmModel extends svm {
 		.
 		.
 		
-	Gonna use this private method to convert provide matrices to training data*/
+	Gonna use this private method to convert provide matrices to training data
 
-/*	
-	private svm_node[]  convertMatrix(){
-		svm_node[] data = null;
+	*/
+	/**
+	 * @param input
+	 * @return an array of svm_node
+	 */
+	private svm_node[][] convertMatrix(CombineSvmMatrix input){
+		svm_node[][] data = new svm_node[input.row][input.col];
+		for ( int i = 0 ; i < input.row; i++  )
+		{
+			for ( int s =  0; s < input.col; s++)
+			{
+				data[i][s].index = s + 1;
+				data[i][s].value = input.svm[i][s];
+			}
+			
+		}
 		return data;
 	}
 	
 
 }
-*/
