@@ -16,6 +16,7 @@ public class SvmMatrix {
 	String filename;
 	int T1, T2;
 	int rows, cols;
+	static int shift = 8;
 	
 	/**
 	 * @param args
@@ -26,7 +27,7 @@ public class SvmMatrix {
 		this.T1 = t1;
 		this.T2 = t2;
 		
-		rows = (T1*128)-((128*T2)-1);
+		rows = (int) Math.floor((T1*128 - T2*128) / shift); // how many times we can shift to the right
 		cols = T2*128*14;
 		
 		this.svm = new double[rows][cols];
@@ -35,12 +36,44 @@ public class SvmMatrix {
 	public void generateSVM() {
 		BufferedReader reader = null;
 		String line;
-		int currentRow = 0;
+		//int currentRow = 0;
 		
 		try {
 			reader = new BufferedReader(new FileReader("MatrixData/" + filename));
 			
-			//for (int i=0; i<(T1*128)-127; i++) {
+			// put all the data in the queue
+			// file contains 1280 lines?
+			for ( int i = 0;  i < (T1 * 128); i++ )
+			{
+				line = reader.readLine();
+				String[] tokens = line.split(" ");
+				
+				for (int token=0; token<tokens.length;token++) {
+					window.add(Double.parseDouble(tokens[token]));
+				}
+				
+			}
+			// fill a row of the svmMatrix with T2 seconds of data
+			for ( int currentrow = 0; currentrow < rows; currentrow++)
+			{
+				for ( int currentcol = 0; currentcol < cols; currentcol++)
+				{
+					svm[currentrow][currentcol] = window.get(currentcol);
+				}
+				
+				// remove the values that are shifted out
+				for ( int removal = 0; removal < shift; removal++ )
+				{
+					window.remove(0);
+				}
+			}
+			
+			
+			
+			
+/*			// this loop is not very intuitive
+ * 			// since I'm changing the sampling rate I will write a new loop  -Bing
+ * 			//for (int i=0; i<(T1*128)-127; i++) {
 			for (int i=0; i<rows; i++) {
 				// first run
 				if (i == 0) {
@@ -84,7 +117,7 @@ public class SvmMatrix {
 				}
 
 				currentRow++;
-			}
+			}*/
 			
 		} catch (IOException e) {
 			System.err.println(e.getMessage());

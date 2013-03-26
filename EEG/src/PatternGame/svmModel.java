@@ -91,7 +91,7 @@ public class svmModel extends svm {
 	{
 		int [] labels = null;
 		svm_get_labels(model, labels);
-		if ( model == null || labels.length == 0) // if model doesn't exist or there are no classes
+		if ( model == null ) // if model doesn't exist or there are no classes
 		{
 			System.out.println("Invalid Model");
 		}
@@ -103,7 +103,7 @@ public class svmModel extends svm {
 		}
 
 		svm_node[] testData = new svm_node[input.length];
-		double[] probabilities = new double[labels.length];
+		double[] probabilities = new double[3];
 	
 		
 		for (int i = 0; i < input.length; i++)
