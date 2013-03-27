@@ -93,12 +93,14 @@ public class svmModel extends svm {
 		svm_get_labels(model, labels);
 		if ( model == null ) // if model doesn't exist or there are no classes
 		{
-			System.out.println("Invalid Model");
+			System.err.println("Invalid Model");
+			System.exit(0);
 		}
 		
 		if (svm_check_probability_model(model) == 0) // if probability is not enabled
 		{
-			System.out.println("Model cannot make probability estitames, please check model parameters");
+			System.err.println("Model cannot make probability estitames, please check model parameters");
+			System.exit(0);
 			return null;
 		}
 
@@ -126,7 +128,7 @@ public class svmModel extends svm {
 	public void train(CombineSvmMatrix input){
 		if (model != null)
 		{
-			System.out.println("There is an existing model");
+			System.err.println("There is an existing model");
 		}
 		this.problem.l = input.row;
 		this.problem.y = input.svmLabel;
@@ -135,11 +137,12 @@ public class svmModel extends svm {
 		this.model = svm_train(problem, parameters);
 		
 		if ( this.model != null ){
-			System.out.println("Training successful");
+			System.err.println("Training successful");
 		}
 		else
 		{
 			System.err.println("Training failed, please verify model parameters and training data!");
+			System.exit(0);
 		}
 		
 		

@@ -110,6 +110,7 @@ public class PatternDriver extends JFrame {
 	public static void main(String[] args) {
 	
 		Matrix M = null; //handle for the matrices
+		Matrix M1 =  null; // need another matrix for the second sample during testing
 		
 		// file name of matrices
 		String matrixFilename;
@@ -183,12 +184,12 @@ public class PatternDriver extends JFrame {
 		CombineSvmMatrix svm = new CombineSvmMatrix(svm1,svm2,svm3);
 		svm1 = null; svm2 = null; svm3 = null; // don't need these anymore
 		
-		//start training
-		svmModel Model = new svmModel();
-		Model.train(svm);
+		//START TRAINING
+		svmModel model = new svmModel();
+		model.train(svm);
 		
 		// only if you need to output the matrix
-		svm.svmout(fileName);
+		//svm.svmout(fileName);
 		
 		// don't need svm anymore
 		svm = null;
@@ -203,6 +204,15 @@ public class PatternDriver extends JFrame {
 			//Elicit pattern A
 			JOptionPane.showMessageDialog(null, firstTestPattern, "The first pattern", JOptionPane.PLAIN_MESSAGE);
 			
+			// wait 1 second before recording the actual data
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				System.err.println(e.getMessage());
+				System.exit(-1);
+			}
+			
+			// record only one sample
 			dc.setMatrix(T2);
 			//dc_separate = new DataCollector("thread_data", fileName + "_BallRollingLeft_"+i);
 			while(dc.writingMatrix.get()) {
@@ -210,12 +220,28 @@ public class PatternDriver extends JFrame {
 			}
 			//dc_separate = null;                                                                            
 			M = dc.getMatrix();
-			M.toFile(fileName, "BallRollingLeft_" + i);
+			
+			// record the second sample
+			dc.setMatrix(T2);
+
+			while(dc.writingMatrix.get()) {
+				Thread.yield();//wait for the matrix to be written
+			}
+			
+			M1 = dc.getMatrix();
+			
+			//obtain and display results
+			double[] result1 = model.predict(prepareTest(M));
+			double[] result2 = model.predict(prepareTest(M1));
+			
+			JOptionPane.showMessageDialog(null, outputresult(result1), "Prediction for the 1st second", JOptionPane.PLAIN_MESSAGE);
+			
+			JOptionPane.showMessageDialog(null, outputresult(result2), "Prediction for the 2nd second", JOptionPane.PLAIN_MESSAGE);
 		    
 			 //Let the user take a break
 		  	JOptionPane.showMessageDialog(null, relaxText, "It's break time!", JOptionPane.PLAIN_MESSAGE);
 			
-            window.setVisible(true);
+/*            window.setVisible(true);
             dc.setMatrix(breakTime);
             //dc_separate = new DataCollector("thread_data", fileName + "_Break_10sec_BallRollingLeft_" + i);
             while (dc.writingMatrix.get()) {
@@ -227,10 +253,20 @@ public class PatternDriver extends JFrame {
             MiddleMatrixChunk mmc1 = new MiddleMatrixChunk(matrixFilename,breakTime);
             mmc1.generateChunk();
             mmc1.chunkout();
-            window.setVisible(false);
+            window.setVisible(false);*/
 			
 			//Elicit pattern B
 			JOptionPane.showMessageDialog(null, secondTestPattern, "The second pattern", JOptionPane.PLAIN_MESSAGE);
+			
+			// wait 1 second before recording the actual data
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				System.err.println(e.getMessage());
+				System.exit(-1);
+			}
+			
+			// gather the first sample
 			dc.setMatrix(T2);
 			//dc_separate = new DataCollector("thread_data", fileName + "_BallRollingRight_" + i);
 			while(dc.writingMatrix.get()) {
@@ -238,11 +274,28 @@ public class PatternDriver extends JFrame {
 			}
 			//dc_separate = null;
 			M = dc.getMatrix();
-			M.toFile(fileName, "BallRollingRight_" + i);
+			//M.toFile(fileName, "BallRollingRight_" + i);
+			
+			// record the second sample
+			dc.setMatrix(T2);
+			
+			while(dc.writingMatrix.get()) {
+				Thread.yield();//wait for the matrix to be written
+			}
+			
+			M1 = dc.getMatrix();
+			
+			// obtain and dsiplay results
+			result1 = model.predict(prepareTest(M));
+			result2 = model.predict(prepareTest(M1));
+			
+			JOptionPane.showMessageDialog(null, outputresult(result1), "Prediction for the 1st second", JOptionPane.PLAIN_MESSAGE);
+			
+			JOptionPane.showMessageDialog(null, outputresult(result2), "Prediction for the 2nd second", JOptionPane.PLAIN_MESSAGE);
 			
 			//Let the user take a break
 		  	JOptionPane.showMessageDialog(null, relaxText, "It's break time!", JOptionPane.PLAIN_MESSAGE);
-            window.setVisible(true);
+/*            window.setVisible(true);
             dc.setMatrix(breakTime);
             //dc_separate = new DataCollector("thread_data", fileName + "_Break_10sec_BallRollingRight_" + i);
             while (dc.writingMatrix.get()) {
@@ -254,11 +307,21 @@ public class PatternDriver extends JFrame {
             MiddleMatrixChunk mmc2 = new MiddleMatrixChunk(matrixFilename,breakTime);
             mmc2.generateChunk();
             mmc2.chunkout();
-            window.setVisible(false);
+            window.setVisible(false);*/
 			
 			
 			//elicit pattern C
 			JOptionPane.showMessageDialog(null, thirdTestPattern, "The third pattern", JOptionPane.PLAIN_MESSAGE);
+			
+			// wait 1 second before recording the actual data
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				System.err.println(e.getMessage());
+				System.exit(-1);
+			}
+			
+			// gather the first sample
 			dc.setMatrix(T2);
 			//dc_separate = new DataCollector("thread_data", fileName + "_BallFloatingUp_" + i);
 			while(dc.writingMatrix.get()) {
@@ -266,10 +329,27 @@ public class PatternDriver extends JFrame {
 			}
 			//dc_separate = null;
 			M = dc.getMatrix();
-			M.toFile(fileName, "BallFloatingUp_" + i);
+			//M.toFile(fileName, "BallFloatingUp_" + i);
+			
+			// record the second sample
+			dc.setMatrix(T2);
+			
+			while(dc.writingMatrix.get()) {
+				Thread.yield();//wait for the matrix to be written
+			}
+			
+			M1 = dc.getMatrix();
+			
+			//obtain and display results
+			result1 = model.predict(prepareTest(M));
+			result2 = model.predict(prepareTest(M1));
+			
+			JOptionPane.showMessageDialog(null, outputresult(result1), "Prediction for the 1st second", JOptionPane.PLAIN_MESSAGE);
+			
+			JOptionPane.showMessageDialog(null, outputresult(result2), "Prediction for the 2nd second", JOptionPane.PLAIN_MESSAGE);
 			
 			JOptionPane.showMessageDialog(null, relaxText, "It's break time!", JOptionPane.PLAIN_MESSAGE);
-			window.setVisible(true);
+/*			window.setVisible(true);
             dc.setMatrix(breakTime);
             //dc_separate = new DataCollector("thread_data", fileName + "_Break_10sec_BallFloatingUp_" + i);
             while (dc.writingMatrix.get()) {
@@ -281,7 +361,7 @@ public class PatternDriver extends JFrame {
             MiddleMatrixChunk mmc3 = new MiddleMatrixChunk(matrixFilename,breakTime);
             mmc3.generateChunk();
             mmc3.chunkout();
-            window.setVisible(false);
+            window.setVisible(false);*/
 			
             if (i == n) {
             	JOptionPane.showMessageDialog(null, 
@@ -344,6 +424,28 @@ public class PatternDriver extends JFrame {
 	  	window.getContentPane().add(pan,"Center");
 	  	window.setSize(200,100);
 	  	window.setLocationRelativeTo(null);
+	}
+	
+	private static double[] prepareTest(Matrix input){
+		// convert the matrix into a sample
+		double [] test = new double [128 * 14];
+		for ( int i = 0; i < 128;  i++)
+		{
+			for ( int s = 0; s < 14; s++)
+			{
+				test[i * 14 + s] = input.matrix[i][s];
+			}
+		}
+		return test;
+		
+	}
+	
+	private static String outputresult(double [] results)
+	{
+		// output the results of SVM's estimation
+		return "for the input.\n" + results[0] + "chance it was pattern 1\n" + results[1] +
+				"chance it was pattern 2\n" + results[2] + "chance it was pattern 3";
+		
 	}
 	
 }
