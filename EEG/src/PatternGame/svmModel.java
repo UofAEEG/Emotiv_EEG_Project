@@ -89,7 +89,9 @@ public class svmModel extends svm {
 	 */
 	public double[] predict(double[] input)
 	{
-		int [] labels = null;
+		//int [] labels = null;
+		System.out.println("length:"+input.length);
+		int [] labels = new int[input.length];
 		svm_get_labels(model, labels);
 		if ( model == null ) // if model doesn't exist or there are no classes
 		{
@@ -109,7 +111,9 @@ public class svmModel extends svm {
 	
 		
 		for (int i = 0; i < input.length; i++)
-		{
+		{	
+			testData[i] = new svm_node();
+			
 			testData[i].index = i + 1;
 			testData[i].value = input[i];
 		}
