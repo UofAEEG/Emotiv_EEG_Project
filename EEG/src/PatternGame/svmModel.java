@@ -133,6 +133,7 @@ public class svmModel extends svm {
 		this.problem.l = input.row;
 		this.problem.y = input.svmLabel;
 		this.problem.x = convertMatrix(input);
+		//this.problem.x = convertMatrix2(input.getSvmMatrix(), input.row, input.col);
 		
 		this.model = svm_train(problem, parameters);
 		
@@ -173,16 +174,22 @@ public class svmModel extends svm {
 	 * @return an array of svm_node
 	 */
 	private svm_node[][] convertMatrix(CombineSvmMatrix input){
+		
 		svm_node[][] data = new svm_node[input.row][input.col];
+		//svm_node data = new svm_node();
+		
 		for ( int i = 0 ; i < input.row; i++  )
 		{
 			for ( int s =  0; s < input.col; s++)
 			{
+				data[i][s] = new svm_node();
+				
 				data[i][s].index = s + 1;
 				data[i][s].value = input.svm[i][s];
 			}
 			
 		}
+		
 		return data;
 	}
 	

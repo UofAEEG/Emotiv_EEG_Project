@@ -91,8 +91,9 @@ public class CombineSvmMatrix {
 			writer = new BufferedWriter(new FileWriter("Svm/SVM_Matrix_"+filename+".txt"));
 
 			for (int i=0; i<totalrow; i++) {
+				writer.write(i+": ");
 				for (int j=0; j<col; j++) {
-					writer.write(String.format("%.2f",svm[i][j]) + " "); 
+					writer.write(j+":"+String.format("%.2f",svm[i][j]) + " "); 
 				}
 				writer.newLine();
 			}
