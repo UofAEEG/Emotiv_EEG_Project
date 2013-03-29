@@ -89,8 +89,6 @@ public class svmModel extends svm {
 	 */
 	public double[] predict(double[] input)
 	{
-		//int [] labels = null;
-		System.out.println("length:"+input.length);
 		int [] labels = new int[input.length];
 		svm_get_labels(model, labels);
 		if ( model == null ) // if model doesn't exist or there are no classes
@@ -137,7 +135,6 @@ public class svmModel extends svm {
 		this.problem.l = input.row;
 		this.problem.y = input.svmLabel;
 		this.problem.x = convertMatrix(input);
-		//this.problem.x = convertMatrix2(input.getSvmMatrix(), input.row, input.col);
 		
 		this.model = svm_train(problem, parameters);
 		
@@ -180,7 +177,6 @@ public class svmModel extends svm {
 	private svm_node[][] convertMatrix(CombineSvmMatrix input){
 		
 		svm_node[][] data = new svm_node[input.row][input.col];
-		//svm_node data = new svm_node();
 		
 		for ( int i = 0 ; i < input.row; i++  )
 		{
