@@ -60,7 +60,7 @@ public class svmModel extends svm {
 	public svmModel() {
 		super();
 		this.problem = new svm_problem();
-		
+
 		this.parameters = new svm_parameter();
 		parameters.svm_type = svm_parameter.C_SVC;
 		parameters.kernel_type = svm_parameter.LINEAR;
@@ -70,12 +70,18 @@ public class svmModel extends svm {
 		
 		parameters.cache_size = 500f;
 		parameters.eps = 0.001f;
-		parameters.C = 0;
+		parameters.C = 1;
 		parameters.nr_weight = 0;
 		parameters.shrinking = 0;
 		parameters.probability = 1;
 		
-		System.err.println(svm.svm_check_parameter(problem, parameters));
+		String error_msg = svm.svm_check_parameter(problem, parameters);
+		if(error_msg != null)
+		{
+			System.err.print("ERROR: "+error_msg+"\n");
+			System.exit(1);
+		}
+		
 		
 		this.model = null;
 		
@@ -132,9 +138,15 @@ public class svmModel extends svm {
 		{
 			System.err.println("There is an existing model");
 		}
-		this.problem.l = input.row;
+		this.problem.l = input.totalrow;
 		this.problem.y = input.svmLabel;
 		this.problem.x = convertMatrix(input);
+		
+		// input.row output
+		System.out.println("input.row:"+input.totalrow+" , input.svmLabel.length:"+input.svmLabel.length);
+		
+		// label test
+		System.out.println("label1:"+input.svmLabel[0]+" ,label2:"+input.svmLabel[input.totalrow/3]+" ,label3: "+input.svmLabel[2*(input.totalrow/3)]);
 		
 		this.model = svm_train(problem, parameters);
 		
@@ -176,10 +188,11 @@ public class svmModel extends svm {
 	 */
 	private svm_node[][] convertMatrix(CombineSvmMatrix input){
 		
-		svm_node[][] data = new svm_node[input.row][input.col];
+		svm_node[][] data = new svm_node[input.totalrow][input.col];
 		
-		for ( int i = 0 ; i < input.row; i++  )
+		for ( int i = 0 ; i < input.totalrow; i++  )
 		{
+			
 			for ( int s =  0; s < input.col; s++)
 			{
 				data[i][s] = new svm_node();
