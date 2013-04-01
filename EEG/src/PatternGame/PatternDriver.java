@@ -230,6 +230,10 @@ public class PatternDriver extends JFrame {
 			
 			M1 = dc.getMatrix();
 			
+			//test prepareTest
+			//double[] _test = prepareTest(M1);
+			//System.out.println("first element: "+_test[0]+" ,last element: "+_test[_test.length-1]);
+			
 			//obtain and display results
 			double[] result1 = model.predict(prepareTest(M));
 			double[] result2 = model.predict(prepareTest(M1));

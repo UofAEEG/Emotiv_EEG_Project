@@ -206,5 +206,5 @@ public class svmModel extends svm {
 		return data;
 	}
 	
-
+	
 }
