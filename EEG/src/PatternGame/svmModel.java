@@ -63,9 +63,10 @@ public class svmModel extends svm {
 
 		this.parameters = new svm_parameter();
 		parameters.svm_type = svm_parameter.C_SVC;
-		parameters.kernel_type = svm_parameter.LINEAR;
+		parameters.kernel_type = svm_parameter.RBF;
+		parameters.C = 1;
 		parameters.degree = 0;
-		parameters.gamma = 0;
+		parameters.gamma = 1;
 		parameters.coef0 = 0;
 		
 		parameters.cache_size = 500f;
@@ -122,7 +123,7 @@ public class svmModel extends svm {
 			testData[i].value = input[i];
 		}
 		
-		svm_predict_values(model, testData, probabilities);
+		svm_predict_probability(model, testData, probabilities);
 		
 		
 		return probabilities;
