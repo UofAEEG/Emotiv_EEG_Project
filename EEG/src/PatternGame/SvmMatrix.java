@@ -166,8 +166,9 @@ public class SvmMatrix {
 		//int currentRow = 0;
 		
 		try {
-			reader = new BufferedReader(new FileReader("MatrixData/" + filename));
-			
+
+			reader = new BufferedReader(new FileReader(filename));
+
 			// put all the data in the queue
 			// file contains 1280 lines?
 			for ( int i = 0;  i < (T1 * 128); i++ )

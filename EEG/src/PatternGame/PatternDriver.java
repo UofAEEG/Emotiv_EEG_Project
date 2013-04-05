@@ -51,7 +51,7 @@ public class PatternDriver extends JFrame {
 	private static Sample sample = null;
 	private static DataCollector dc = null;
 	private static int n = 10; //number of test data rounds
-	private static int t = 2;
+	private static int t = 10;
 	private static int T2 = 1; //duration of test data in seconds
 	private static int T1 = t * T2; //duration of training data in seconds
 	
@@ -138,10 +138,9 @@ public class PatternDriver extends JFrame {
 		 * Elicit pattern A
 		 */
 		M = elicitPattern(firstTrainingPattern, "The first pattern", "_TrainingData_A", T1, false);
-		//TODO: skip this file write (pointless)
 		matrixFilename = M.toFile(fileName, "_TrainingData_A");
 		// svm generation test
-		SvmMatrix svm1 = new SvmMatrix(matrixFilename,T1,T2);
+		SvmMatrix svm1 = new SvmMatrix("MatrixData/" + matrixFilename,T1,T2);
 		svm1.generateSVM();
 		
 		
@@ -155,9 +154,8 @@ public class PatternDriver extends JFrame {
 		 * Elicit pattern B
 		 */
 		M = elicitPattern(secondTrainingPattern, "The second pattern", "_TrainingData_B", T1, false);
-		//TODO: skip this file write (pointless)
 		matrixFilename = M.toFile(fileName, "_TrainingData_B");
-		SvmMatrix svm2 = new SvmMatrix(matrixFilename,T1,T2);
+		SvmMatrix svm2 = new SvmMatrix("MatrixData/" + matrixFilename,T1,T2);
 		svm2.generateSVM();
 	   
 		
@@ -171,9 +169,8 @@ public class PatternDriver extends JFrame {
 		 * elicit pattern C
 		 */
 	  	M = elicitPattern(thirdTrainingPattern, "The third pattern", "_TrainingData_C", T1,false);
-	    //TODO: skip this file write (pointless)
 	  	matrixFilename = M.toFile(fileName, "_TrainingData_C");
-		SvmMatrix svm3 = new SvmMatrix(matrixFilename,T1,T2);
+		SvmMatrix svm3 = new SvmMatrix("MatrixData/" + matrixFilename,T1,T2);
 		svm3.generateSVM();
 		
 		CombineSvmMatrix svm = new CombineSvmMatrix(svm1,svm2,svm3);
@@ -197,6 +194,8 @@ public class PatternDriver extends JFrame {
 			 */
 			M = elicitPattern(firstTestPattern, "The first pattern", "_TestData_A_1stSecond_"+ i, T2, true);		
 			M1 = grabSecondPattern("_TestData_A_2ndSecond_"+ i, T2);
+			M.toFile(fileName, "_TestData_A_1stSecond_"+ i);
+			M1.toFile(fileName, "_TestData_A_2ndSecond_"+ i);
 			//obtain and display results
 			System.out.println(outputresult(model.predict(prepareTest(M))));
 			System.out.println(outputresult(model.predict(prepareTest(M1))));
@@ -232,7 +231,8 @@ public class PatternDriver extends JFrame {
 			 */
 			M = elicitPattern(secondTestPattern, "The second pattern", "_TestData_B_1stSecond_"+ i, T2, true);		
 			M1 = grabSecondPattern("_TestData_B_2ndSecond_"+ i, T2);
-			
+			M.toFile(fileName, "_TestData_B_1stSecond_"+ i);
+			M1.toFile(fileName, "_TestData_B_2ndSecond_"+ i);
 			//obtain and display results
 			System.out.println(outputresult(model.predict(prepareTest(M))));
 			System.out.println(outputresult(model.predict(prepareTest(M1))));
@@ -263,7 +263,9 @@ public class PatternDriver extends JFrame {
 			 * Elicit pattern C
 			 */
 			M = elicitPattern(thirdTestPattern, "The third pattern", "_TestData_C_1stSecond_"+ i, T2, true);		
-			M1 = grabSecondPattern("_TestData_B_2ndSecond_"+ i, T2);
+			M1 = grabSecondPattern("_TestData_C_2ndSecond_"+ i, T2);
+			M.toFile(fileName, "_TestData_C_1stSecond_"+ i);
+			M1.toFile(fileName, "_TestData_C_2ndSecond_"+ i);
 			
 			//obtain and display results
 			System.out.println(outputresult(model.predict(prepareTest(M))));

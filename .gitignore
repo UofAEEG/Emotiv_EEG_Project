@@ -4,12 +4,7 @@
 *.war
 *.ear
 bin/*
-Data/
-MatrixData/
-VisualizationData/
 hs_err*
 test.txt
 bin/Raw/RawData.class
-VisualizationData/
-Data/
 

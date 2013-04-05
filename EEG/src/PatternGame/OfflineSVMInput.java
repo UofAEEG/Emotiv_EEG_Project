@@ -1,19 +1,27 @@
 package PatternGame;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class OfflineSVMInput {
 
-	String folder = "MatrixData/";
+	static String folder = "MatrixData/";
 	
-	static String datePrefix = "2013-04-04-08-56";  //THIS IS WHERE YOU PUT THE DATE PREFIX!
-
-	static String trainingA = "_TrainingData_A";
-	static String trainingB = "_TrainingData_B";
-	static String trainingC = "_TrainingData_C";
+	static String folder2 = "C:/Users/mark/Documents/GitHub/Emotiv_EEG_Project/EEG";
+	
+	static String trainingA = "_TrainingData_A.txt";
+	static String trainingB = "_TrainingData_B.txt";
+	static String trainingC = "_TrainingData_C.txt";
+	
+	
+	/**  MODIFY HERE  **/
+	static String datePrefix = "2013-04-05-01-38";  //THIS IS WHERE YOU PUT THE DATE PREFIX!
+	static boolean testData = false;                // SET TRUE IF YOU WANT TO PREDICT TEST DATA (we should just test training until model is better)
+	
+	/**  MODIFY HERE **/
 	
 	// These fields need to be the same as in the PatternDriver
 	// when samples were taken 
@@ -27,23 +35,11 @@ public class OfflineSVMInput {
 		/*
 		 * build the file names;
 		 */
-		trainingA = datePrefix + trainingA;
-		trainingB = datePrefix + trainingB;
-		trainingC = datePrefix + trainingC;
+		trainingA = folder + datePrefix + trainingA;
+		trainingB = folder + datePrefix + trainingB;
+		trainingC = folder + datePrefix + trainingC;
 		
-		ArrayList<String> testDataFiles = new ArrayList<String>();
-		for(int i = 1; i <= n; i++) {
-			testDataFiles.add("_TestData_A_1stSecond_" + i);
-			testDataFiles.add("_TestData_A_2ndSecond_" + i);
-			
-			testDataFiles.add("_TestData_B_1stSecond_" + i);
-			testDataFiles.add("_TestData_B_2ndSecond_" + i);
-			
-			testDataFiles.add("_TestData_C_1stSecond_" + i);
-			testDataFiles.add("_TestData_C_2ndSecond_" + i);
-		}
-		
-		SvmMatrix svm1 = new SvmMatrix(trainingA,T1,T2);
+		SvmMatrix svm1 = new SvmMatrix(trainingA, T1, T2);
 		svm1.generateSVM();
 		
 		SvmMatrix svm2 = new SvmMatrix(trainingB,T1,T2);
@@ -62,13 +58,57 @@ public class OfflineSVMInput {
 		// don't need svm anymore
 		svm = null;
 		
+		System.out.println();
+		System.out.println("Pattern A training Data:");
+		System.out.println(PatternDriver.outputresult(model.predict(PatternDriver.prepareTest(readMatrix(trainingA)))));
+		
+		System.out.println();
+		System.out.println("Pattern b training Data:");
+		System.out.println(PatternDriver.outputresult(model.predict(PatternDriver.prepareTest(readMatrix(trainingB)))));
+		
+		System.out.println();
+		System.out.println("Pattern C training Data:");
+		System.out.println(PatternDriver.outputresult(model.predict(PatternDriver.prepareTest(readMatrix(trainingC)))));
+		
+		
+		
+		
+		
+		/*
+		 * predict test data
+		 */
+		if(testData) {
+			ArrayList<String> testDataFiles = new ArrayList<String>();
+			for(int i = 1; i <= n; i++) {
+				testDataFiles.add("_TestData_A_1stSecond_" + i  + ".txt");
+				testDataFiles.add("_TestData_A_2ndSecond_" + i  + ".txt");
+				
+				testDataFiles.add("_TestData_B_1stSecond_" + i  + ".txt");
+				testDataFiles.add("_TestData_B_2ndSecond_" + i  + ".txt");
+				
+				testDataFiles.add("_TestData_C_1stSecond_" + i  + ".txt");
+				testDataFiles.add("_TestData_C_2ndSecond_" + i  + ".txt");
+			}
+			predictTestData(model, testDataFiles);
+		}
+		
+	}
+
+	/*
+	 * loops through the file names and elicits the 
+	 * prediction for each one
+	 */
+	static void predictTestData(svmModel model, ArrayList<String> testDataFiles) {
 		for(String s: testDataFiles) {
 			System.out.println();
 			System.out.println(s);
 			System.out.println(PatternDriver.outputresult(model.predict(PatternDriver.prepareTest(readMatrix(s)))));
 		}
 	}
-
+	
+	/*
+	 * Parses the filenames and builds matrix objects
+	 */
 	static Matrix readMatrix(String fileName) {
 		Matrix m = new Matrix(T2);
 		
