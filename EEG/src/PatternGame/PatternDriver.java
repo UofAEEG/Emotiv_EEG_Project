@@ -139,7 +139,7 @@ public class PatternDriver extends JFrame {
 		 */
 		M = elicitPattern(firstTrainingPattern, "The first pattern", "_TrainingData_A", T1, false);
 		//TODO: skip this file write (pointless)
-		matrixFilename = M.toFile(fileName, "BallRollingLeft");
+		matrixFilename = M.toFile(fileName, "_TrainingData_A");
 		// svm generation test
 		SvmMatrix svm1 = new SvmMatrix(matrixFilename,T1,T2);
 		svm1.generateSVM();
@@ -156,7 +156,7 @@ public class PatternDriver extends JFrame {
 		 */
 		M = elicitPattern(secondTrainingPattern, "The second pattern", "_TrainingData_B", T1, false);
 		//TODO: skip this file write (pointless)
-		matrixFilename = M.toFile(fileName, "BallRollingRight");
+		matrixFilename = M.toFile(fileName, "_TrainingData_B");
 		SvmMatrix svm2 = new SvmMatrix(matrixFilename,T1,T2);
 		svm2.generateSVM();
 	   
@@ -172,7 +172,7 @@ public class PatternDriver extends JFrame {
 		 */
 	  	M = elicitPattern(thirdTrainingPattern, "The third pattern", "_TrainingData_C", T1,false);
 	    //TODO: skip this file write (pointless)
-	  	matrixFilename = M.toFile(fileName, "BallFloatingUp");
+	  	matrixFilename = M.toFile(fileName, "_TrainingData_C");
 		SvmMatrix svm3 = new SvmMatrix(matrixFilename,T1,T2);
 		svm3.generateSVM();
 		
@@ -394,7 +394,7 @@ public class PatternDriver extends JFrame {
 	/* TODO
 	 * Nobody knows what I do because my creator cant comment
 	 */
-	private static double[] prepareTest(Matrix input){
+	static double[] prepareTest(Matrix input){
 		// convert the matrix into a sample
 		double [] test = new double [128 * 14];
 		for ( int i = 0; i < 128;  i++)
@@ -411,7 +411,7 @@ public class PatternDriver extends JFrame {
 	/* TODO
 	 * Nobody knows what I do because my creator cant comment
 	 */
-	private static String outputresult(double [] results)
+	static String outputresult(double [] results)
 	{
 		// output the results of SVM's estimation
 		return "for the input.\n" + results[0] + "chance it was pattern 1\n" + results[1] +

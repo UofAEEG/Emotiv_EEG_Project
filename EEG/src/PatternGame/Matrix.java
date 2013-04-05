@@ -42,12 +42,12 @@ public class Matrix {
 	/*
 	 * Write the matrix data to a text file.
 	 */
-	public String toFile(String fileName, String patternName) {
+	public String toFile(String fileName, String fileSuffix) {
 	    
 	    BufferedWriter matrixout = null;
 	    
 	    try {
-	        matrixout = new BufferedWriter(new FileWriter("MatrixData/" + fileName + "_" + patternName + ".txt"));
+	        matrixout = new BufferedWriter(new FileWriter("MatrixData/" + fileName + fileSuffix + ".txt"));
 	        
 		    for (int i = 0; i < matrixSize; i++) {
 		    	for (int j = 0; j < numSensors; j++){
@@ -63,6 +63,6 @@ public class Matrix {
 	            System.err.println(e.getMessage());
 	            System.exit(-1);
 	        }
-	    return fileName + "_" + patternName + ".txt";
+	    return fileName + fileSuffix + ".txt";
     }
 }
