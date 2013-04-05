@@ -26,7 +26,7 @@ public class OfflineSVMInput {
 	// These fields need to be the same as in the PatternDriver
 	// when samples were taken 
 	private static int n = 10; //number of test data rounds
-	private static int t = 2;
+	private static int t = 10;
 	private static int T2 = 1; //duration of test data in seconds
 	private static int T1 = t * T2; //duration of training data in seconds
 	
@@ -60,15 +60,15 @@ public class OfflineSVMInput {
 		
 		System.out.println();
 		System.out.println("Pattern A training Data:");
-		System.out.println(PatternDriver.outputresult(model.predict(PatternDriver.prepareTest(readMatrix(trainingA)))));
+		System.out.println(PatternDriver.outputresult(model.predict(PatternDriver.prepareTest(readMatrix(trainingA, T1)))));
 		
 		System.out.println();
 		System.out.println("Pattern b training Data:");
-		System.out.println(PatternDriver.outputresult(model.predict(PatternDriver.prepareTest(readMatrix(trainingB)))));
+		System.out.println(PatternDriver.outputresult(model.predict(PatternDriver.prepareTest(readMatrix(trainingB, T1)))));
 		
 		System.out.println();
 		System.out.println("Pattern C training Data:");
-		System.out.println(PatternDriver.outputresult(model.predict(PatternDriver.prepareTest(readMatrix(trainingC)))));
+		System.out.println(PatternDriver.outputresult(model.predict(PatternDriver.prepareTest(readMatrix(trainingC, T1)))));
 		
 		
 		
@@ -102,15 +102,15 @@ public class OfflineSVMInput {
 		for(String s: testDataFiles) {
 			System.out.println();
 			System.out.println(s);
-			System.out.println(PatternDriver.outputresult(model.predict(PatternDriver.prepareTest(readMatrix(s)))));
+			System.out.println(PatternDriver.outputresult(model.predict(PatternDriver.prepareTest(readMatrix(s, T2)))));
 		}
 	}
 	
 	/*
 	 * Parses the filenames and builds matrix objects
 	 */
-	static Matrix readMatrix(String fileName) {
-		Matrix m = new Matrix(T2);
+	static Matrix readMatrix(String fileName, int T) {
+		Matrix m = new Matrix(T);
 		
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(fileName));
