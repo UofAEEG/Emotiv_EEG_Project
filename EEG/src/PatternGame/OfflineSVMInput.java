@@ -18,7 +18,7 @@ public class OfflineSVMInput {
 	
 	
 	/**  MODIFY HERE  **/
-	static String datePrefix = "2013-04-05-01-38";  //THIS IS WHERE YOU PUT THE DATE PREFIX!
+	static String datePrefix = "2013-04-06-02-27";  //THIS IS WHERE YOU PUT THE DATE PREFIX!
 	static boolean testData = false;                // SET TRUE IF YOU WANT TO PREDICT TEST DATA (we should just test training until model is better)
 	
 	/**  MODIFY HERE **/

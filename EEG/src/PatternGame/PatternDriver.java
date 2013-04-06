@@ -416,8 +416,8 @@ public class PatternDriver extends JFrame {
 	static String outputresult(double [] results)
 	{
 		// output the results of SVM's estimation
-		return "for the input.\n" + results[0] + "chance it was pattern 1\n" + results[1] +
-				"chance it was pattern 2\n" + results[2] + "chance it was pattern 3";
+		return "\n" + results[0] + "chance it was pattern A\n" + results[1] +
+				"chance it was pattern B\n" + results[2] + "chance it was pattern C";
 		
 	}
 	

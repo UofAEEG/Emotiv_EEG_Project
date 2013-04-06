@@ -1,4 +1,4 @@
-file_pre = file_pre = "2013-04-05-03-14_TrainingData_C"
+file_pre = file_pre = "2013-04-06-02-27_TrainingData_C"
 
 file_txt = file_pre . ".txt"
 file_out = file_pre . ".png"
@@ -88,7 +88,7 @@ plot file_txt u (column(pTime)):(column(pAF3)) w l lw LW linecolor rgb "pink" t 
    , ""       u (column(pTime)):(column(pQAF4)*50+3500) w l lw LW linecolor rgb "dark-blue" t "QAF4" 
 
 # waits until you click on the figure (so you have time to see it)
-pause mouse
+#pause mouse
 
 #-----------------------------------------------------------------------------
 # Printing into file
