@@ -1,0 +1,30 @@
+Pattern A training Data:
+0.907002965152098 chance it was pattern A
+
+0.08269916733281307 chance it was pattern B
+
+0.01029786751508899 chance it was pattern C
+
+
+Pattern b training Data:
+5.7914696649982414E-8 chance it was pattern A
+
+0.999879692241627 chance it was pattern B
+
+1.2024984367624282E-4 chance it was pattern C
+
+
+Pattern C training Data:
+0.010942716798099687 chance it was pattern A
+
+0.004032670008533279 chance it was pattern B
+
+0.9850246131933671 chance it was pattern C
+
+
+Total number of patterns predicted: 0
+Overall Prediction Accuracy (correct predictions/total predictions): NaN
+Average Prediction Accuracy (sum of prediction accuracy /total prediction): NaN
+Average Prediction Accuracy of Pattern A (correct predictions/total predictions): 0.0
+Average Prediction Accuracy of Pattern B (correct predictions/total predictions): 0.0
+Average Prediction Accuracy of Pattern C (correct predictions/total predictions): 0.0
