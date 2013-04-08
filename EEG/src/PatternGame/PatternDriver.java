@@ -1,23 +1,13 @@
 package PatternGame;
 
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JWindow;
-import javax.swing.border.LineBorder;
-import java.awt.Color;
-import java.awt.GridLayout;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-/*
- * BUGS:
- *  This program does not record randomly selected 1 second long intervals of the break
- */
 
 /*
  * The pattern game
@@ -55,8 +45,6 @@ public class PatternDriver extends JFrame {
 	private static int T2 = 1; //duration of test data in seconds
 	private static int T1 = t * T2; //duration of training data in seconds
 	
-	private static JWindow window;
-	
 	private static String firstTrainingPattern = "Imagine a spinning ball inside the middle your head. This ball is rolling to towards the " +
 		    					  "left side of your head.\nFocus on the ball and follow its movement.\n" +
 		    					  "You will continue this thought for "+ PatternDriver.T1 +" seconds.\n" +
@@ -93,9 +81,7 @@ public class PatternDriver extends JFrame {
 		    "top of your head.\nFocus on the ball and follow its movement.\n" +
 			"You will continue this thought for "+ PatternDriver.T2 +" seconds.\n" +
 		    "Click OK when you are ready to begin.";
-	
-	private static String relaxText = "Good Job. Press Ok and take a 10 second break.";
-	
+		
 	/*
 	 * May not be instanced
 	 */
@@ -133,12 +119,6 @@ public class PatternDriver extends JFrame {
 		
 		
 		/*
-		 * Let the user take a break
-		 */
-		breakTime();
-		
-		
-		/*
 		 * Elicit pattern B
 		 */
 		M = elicitPattern(secondTrainingPattern, "The second pattern", "_TrainingData_B", T1, false);
@@ -146,11 +126,6 @@ public class PatternDriver extends JFrame {
 		SvmMatrix svm2 = new SvmMatrix("MatrixData/" + matrixFilename,T1,T2);
 		svm2.generateSVM();
 	   
-		
-		/*
-		 * Let the user take a break
-		 */
-		breakTime();
 		
 		
 		/*
@@ -177,30 +152,26 @@ public class PatternDriver extends JFrame {
 			/*
 			 * Elicit pattern A
 			 */
-			M = elicitPattern(firstTestPattern, "The first pattern", "_TestData_A_1stSecond_"+ i, T2, true);		
-			M1 = grabSecondPattern("_TestData_A_2ndSecond_"+ i, T2);
+			M = elicitPattern(firstTestPattern, "The first pattern", "_TestData_A_1stSecond_"+ i, T2, true);	
+			M1 =elicitPattern(null, null,"_TestData_A_2ndSecond_"+ i, T2, false);
 			M.toFile(fileName, "_TestData_A_1stSecond_"+ i);
 			M1.toFile(fileName, "_TestData_A_2ndSecond_"+ i);
+			
 			//obtain and display results
 			System.out.println("_TestData_A_1stSecond_"+ i);
 			System.out.println(outputresult(model.predict(prepareTest(M))));
 			System.out.println("_TestData_A_2ndSecond_"+ i);
 			System.out.println(outputresult(model.predict(prepareTest(M1))));
 			
-
-			/*
-			 * Let the user take a break
-			 */
-			breakTime();
-			
 			
 			/*
 			 * Elicit pattern B
 			 */
-			M = elicitPattern(secondTestPattern, "The second pattern", "_TestData_B_1stSecond_"+ i, T2, true);		
-			M1 = grabSecondPattern("_TestData_B_2ndSecond_"+ i, T2);
+			M = elicitPattern(secondTestPattern, "The second pattern", "_TestData_B_1stSecond_"+ i, T2, true);	
+			M1 =elicitPattern(null, null, "_TestData_B_2ndSecond_"+ i, T2, false);
 			M.toFile(fileName, "_TestData_B_1stSecond_"+ i);
 			M1.toFile(fileName, "_TestData_B_2ndSecond_"+ i);
+			
 			//obtain and display results
 			System.out.println("_TestData_B_1stSecond_"+ i);
 			System.out.println(outputresult(model.predict(prepareTest(M))));
@@ -209,16 +180,10 @@ public class PatternDriver extends JFrame {
 			
 			
 			/*
-			 * Let the user take a break
-			 */
-			breakTime();
-			
-			
-			/*
 			 * Elicit pattern C
 			 */
-			M = elicitPattern(thirdTestPattern, "The third pattern", "_TestData_C_1stSecond_"+ i, T2, true);		
-			M1 = grabSecondPattern("_TestData_C_2ndSecond_"+ i, T2);
+			M = elicitPattern(thirdTestPattern, "The third pattern", "_TestData_C_1stSecond_"+ i, T2, true);	
+			M1 =elicitPattern(null, null, "_TestData_C_2ndSecond_"+ i, T2, false);
 			M.toFile(fileName, "_TestData_C_1stSecond_"+ i);
 			M1.toFile(fileName, "_TestData_C_2ndSecond_"+ i);
 			
@@ -228,11 +193,6 @@ public class PatternDriver extends JFrame {
 			System.out.println("_TestData_C_2ndSecond_"+ i);
 			System.out.println(outputresult(model.predict(prepareTest(M1))));
 
-			
-			/*
-			 * Let the user take a break
-			 */
-			breakTime();
 			
             if (i == n) {
             	JOptionPane.showMessageDialog(null, 
@@ -256,21 +216,17 @@ public class PatternDriver extends JFrame {
 		System.out.println("Output files are prefixed with the date " + fileName);
 		System.out.println("Exiting");
 	}
-
-	
-	/*
-	 * Displays the break time dialog
-	 */
-	private static void breakTime() {
-		JOptionPane.showMessageDialog(null, breakText, "It's break time!", JOptionPane.PLAIN_MESSAGE);
-	}
 	
 	
 	/*
 	 * Elicits a pattern from the data collector. Returns the matrix data
 	 */
-	private static Matrix elicitPattern(String message, String title, String fileSuffix, int length, boolean wait) {
-		JOptionPane.showMessageDialog(null, message, title, JOptionPane.PLAIN_MESSAGE);
+	static Matrix elicitPattern(String message, String title, String fileSuffix, int length, boolean wait) {
+		
+		if(title != null) {
+			//show the JOptionPane Dialog
+			JOptionPane.showMessageDialog(null, message, title, JOptionPane.PLAIN_MESSAGE);
+		}
 		
 		if(wait) {
 			// wait 1 second before recording the actual data
@@ -300,27 +256,6 @@ public class PatternDriver extends JFrame {
 		return m;
 	}
 	
-	/*
-	 * TODO: This is a cutout of elicitPatternString... 
-	 * Should probably refactor the above to handle this case.
-	 */
-	private static Matrix grabSecondPattern(String fileSuffix, int length) {
-		Matrix m = null;
-		/*Initialize the text file we are printing to for the visualization data*/
-		try {
-			fileHandle = new BufferedWriter(new FileWriter("VisualizationData/" + fileName + fileSuffix + ".txt"));
-			sample.requestSample(fileHandle, length, dc);
-			//This will block until the sample is ready
-			m = sample.getSample();
-			fileHandle.close();
-		} catch (IOException e) {
-			System.err.println(e.getMessage());
-			System.exit(-1);
-		}
-		
-		
-		return m;
-	}
 	
 	/* 
 	 * 
