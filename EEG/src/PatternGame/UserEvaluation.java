@@ -83,16 +83,14 @@ public class UserEvaluation extends JFrame {
 			/*
 			 * Elicit test pattern
 			 */
-			
+			//TODO custom button text: begin, exit
 			int val = JOptionPane.showConfirmDialog(null, "Think of one of your test patterns for " + T2 + "second(s) ", null, JOptionPane.YES_NO_OPTION);
 			
 			if(val == 1) {
-				
-				//TODO: exit
-				
-				System.exit(0);
+			    //exit condition
+				//TODO: print statistics before exit
+				cleanUp();
 			}
-			
 			
 			//grab the patterns
 			M = elicitPattern(null, null, "_TestData_1stSecond_"+ i, T2, true);		
@@ -100,22 +98,71 @@ public class UserEvaluation extends JFrame {
 			M.toFile(fileName, "_TestData_1stSecond_"+ i);
 			M1.toFile(fileName, "_TestData_2ndSecond_"+ i);
 			
-			//obtain and display results
+			
+			//obtain and display results for the first second
+			double[] results1 = model.predict(PatternDriver.prepareTest(M));
+			predictPattern(results1);
 			System.out.println("_TestData_1stSecond_"+ i);
-			System.out.println(PatternDriver.outputresult(model.predict(PatternDriver.prepareTest(M))));
+			System.out.println(PatternDriver.outputresult(results1));
+			
+			
+			//obtain and display results for the second second
+			double[] results2 = model.predict(PatternDriver.prepareTest(M1));
+			predictPattern(results2);
 			System.out.println("_TestData_2ndSecond_"+ i);
-			System.out.println(PatternDriver.outputresult(model.predict(PatternDriver.prepareTest(M1))));
-			
-			
-			//what were you really thinking of dialog
-			
+			System.out.println(PatternDriver.outputresult(results2));
 			
 			i++;
 		}
 
 	}
 	
+	/*
+	 * 
+	 */
+	static void predictPattern(double[] results) {
+		Double max = null;
+		int index = -1;
+		for(int i = 0; i < results.length; i++) {
+			if(results[i] > 0.5) {
+				max = results[i];
+				index = i;
+			}
+		}
+		
+		if(index == -1) {
+			//could not determine a distinct pattern
+			
+			
+		} else {
+			
+			//svm found a strong match. 
+		}
+		
+		
+		//TODO: ask user which pattern they were thinking.
+		
+		//record into statistics correct/incorrect and what pattern
+		
+	}
 	
+	
+	/*
+	 * The program shutdown process, closes down the
+	 * data collector and waits for the thread to rejoin
+	 */
+	static void cleanUp() {
+		dc.collecting = false;
+		try {
+			dc.join();
+		} catch (InterruptedException e) {
+			System.err.println(e.getMessage());
+			System.exit(-1);
+		}
+		System.out.println("Output files are prefixed with the date " + fileName);
+		System.out.println("Exiting");
+		System.exit(0);
+	}
 	
 	/*
 	 * Elicits a pattern from the data collector. Returns the matrix data
