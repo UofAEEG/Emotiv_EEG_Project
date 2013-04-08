@@ -6,14 +6,14 @@ package PatternGame;
  */
 public class Statistic {
 	
-	Integer predictedPattern = null; // A = 0, B = 1, C = 2
-	Double predictionAccuracy = null;
+	Integer predictedPattern = null; // A = 0, B = 1, C = 2,   -1 for undetermined
+	Double predictionAccuracy = null; //null for undetermined
 	Integer userIdentifiedPattern = null; // A = 0, B = 1, C = 2	
 	
-	public Statistic(int predictedPattern, double predictionAccuracy ,int userIdentifiedPattern) {
-		this.predictedPattern = new Integer(predictedPattern);
-		this.userIdentifiedPattern = new Integer(userIdentifiedPattern);
-		this.predictionAccuracy = new Double(predictionAccuracy);
+	public Statistic(Integer predictedPattern, Double predictionAccuracy , Integer userIdentifiedPattern) {
+		this.predictedPattern = predictedPattern;
+		this.userIdentifiedPattern = userIdentifiedPattern;
+		this.predictionAccuracy = predictionAccuracy;
 		
 	}
 	

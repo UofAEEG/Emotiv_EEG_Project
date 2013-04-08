@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import javax.swing.JFrame;
@@ -20,9 +21,11 @@ public class UserEvaluation extends JFrame {
 	private static int T2 = 1; //duration of test data in seconds
 	private static int T1 = t * T2; //duration of training data in seconds
 	
+	private static ArrayList<Statistic> stats = null;
 	
 	public static void main(String[] args) {
 		
+		stats = new ArrayList<Statistic>();
 		Matrix M = null; //handle for the matrices
 		Matrix M1 =  null; // need another matrix for the second sample during testing
 		sample = new Sample(); //handle for the sample object
@@ -117,8 +120,10 @@ public class UserEvaluation extends JFrame {
 
 	}
 	
+	
 	/*
-	 * 
+	 * Takes the results array returned from model.predict, asks the user which pattern
+	 * they were thinking of, and stores the results as statistics
 	 */
 	static void predictPattern(double[] results) {
 		Double max = null;
@@ -130,20 +135,34 @@ public class UserEvaluation extends JFrame {
 			}
 		}
 		
+		Object[] options = {"A","B","C"};
+        int userPattern = JOptionPane.showOptionDialog(null,
+        									"Which pattern were you thinking of?",
+        									null,
+        									JOptionPane.YES_NO_CANCEL_OPTION,
+        									JOptionPane.QUESTION_MESSAGE,
+        									null,
+        									options,
+        									null);
+
+        Statistic stat;
 		if(index == -1) {
 			//could not determine a distinct pattern
-			
-			
+			stat = new Statistic(null, null, userPattern);
 		} else {
-			
-			//svm found a strong match. 
+			stat = new Statistic(index, max, userPattern); 
 		}
+		stats.add(stat);
 		
-		
-		//TODO: ask user which pattern they were thinking.
-		
-		//record into statistics correct/incorrect and what pattern
-		
+		if(max != null && stat.isCorrectGuess()) {
+			JOptionPane.showMessageDialog(null, "I correctly predicted your pattern with " + (int)(max.doubleValue() * 100) + " accuracy", "Results", JOptionPane.PLAIN_MESSAGE);
+		} else if (index >= 0) {
+			JOptionPane.showMessageDialog(null, "Oops, I mispredicted your pattern to be " + options[index] + "\n" +
+												"With " + (int)(max.doubleValue() * 100) + " accuracy", 
+												"Results", JOptionPane.PLAIN_MESSAGE);
+		} else {
+			JOptionPane.showMessageDialog(null, "I was unable to identify your pattern", "Results", JOptionPane.PLAIN_MESSAGE);
+		}
 	}
 	
 	
@@ -163,6 +182,7 @@ public class UserEvaluation extends JFrame {
 		System.out.println("Exiting");
 		System.exit(0);
 	}
+	
 	
 	/*
 	 * Elicits a pattern from the data collector. Returns the matrix data
