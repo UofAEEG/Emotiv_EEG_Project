@@ -64,7 +64,7 @@ public class svmModel extends svm {
 		this.parameters = new svm_parameter();
 		parameters.svm_type = svm_parameter.C_SVC;
 		parameters.kernel_type = svm_parameter.LINEAR;
-		parameters.C = 1;
+		parameters.C = 5;
 		parameters.degree = 3;
 		parameters.gamma = 1;
 		parameters.coef0 = 0;
