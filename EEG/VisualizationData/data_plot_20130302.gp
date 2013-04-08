@@ -1,4 +1,4 @@
-file_pre = file_pre = "2013-04-06-02-27_TrainingData_C"
+file_pre = file_pre = "2013-04-08-12-10_TrainingData_C"
 
 file_txt = file_pre . ".txt"
 file_out = file_pre . ".png"

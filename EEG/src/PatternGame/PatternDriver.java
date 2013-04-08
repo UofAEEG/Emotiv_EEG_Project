@@ -120,19 +120,7 @@ public class PatternDriver extends JFrame {
 		
 		//start the data collecting thread
 		dc = new DataCollector("thread1", sample);
-		
-		//sets up break window
-		setupLoadingWindow();
-		
-		//wait for data to stabilize
-		System.out.println("Waiting 10 seconds for signals to stabalize...");
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			System.err.println(e.getMessage());
-			System.exit(-1);
-		}
-		
+
 		
 		/*
 		 * Elicit pattern A
@@ -180,9 +168,6 @@ public class PatternDriver extends JFrame {
 		svmModel model = new svmModel();
 		model.train(svm);
 		
-		// only if you need to output the matrix
-//		svm.svmout(fileName);
-		
 		// don't need svm anymore
 		svm = null;
 		
@@ -197,33 +182,16 @@ public class PatternDriver extends JFrame {
 			M.toFile(fileName, "_TestData_A_1stSecond_"+ i);
 			M1.toFile(fileName, "_TestData_A_2ndSecond_"+ i);
 			//obtain and display results
+			System.out.println("_TestData_A_1stSecond_"+ i);
 			System.out.println(outputresult(model.predict(prepareTest(M))));
+			System.out.println("_TestData_A_2ndSecond_"+ i);
 			System.out.println(outputresult(model.predict(prepareTest(M1))));
 			
-//REMOVE?
-//			test prepareTest
-//			double[] _test = prepareTest(M1);
-//			System.out.println("first element: "+_test[0]+" ,last element: "+_test[_test.length-1]);
-//REMOVE?
 
 			/*
 			 * Let the user take a break
 			 */
 			breakTime();
-			
-/*            window.setVisible(true);
-            dc.setMatrix(breakTime);
-            //dc_separate = new DataCollector("thread_data", fileName + "_Break_10sec_BallRollingLeft_" + i);
-            while (dc.writingMatrix.get()) {
-            	Thread.yield();
-            }
-            //dc_separate = null;
-            M = dc.getMatrix();
-            matrixFilename = M.toFile(fileName, "Break_10sec_BallRollingLeft_" + i);
-            MiddleMatrixChunk mmc1 = new MiddleMatrixChunk(matrixFilename,breakTime);
-            mmc1.generateChunk();
-            mmc1.chunkout();
-            window.setVisible(false);*/
 			
 			
 			/*
@@ -234,7 +202,9 @@ public class PatternDriver extends JFrame {
 			M.toFile(fileName, "_TestData_B_1stSecond_"+ i);
 			M1.toFile(fileName, "_TestData_B_2ndSecond_"+ i);
 			//obtain and display results
+			System.out.println("_TestData_B_1stSecond_"+ i);
 			System.out.println(outputresult(model.predict(prepareTest(M))));
+			System.out.println("_TestData_B_2ndSecond_"+ i);
 			System.out.println(outputresult(model.predict(prepareTest(M1))));
 			
 			
@@ -242,21 +212,6 @@ public class PatternDriver extends JFrame {
 			 * Let the user take a break
 			 */
 			breakTime();
-			
-			
-/*            window.setVisible(true);
-            dc.setMatrix(breakTime);
-            //dc_separate = new DataCollector("thread_data", fileName + "_Break_10sec_BallRollingRight_" + i);
-            while (dc.writingMatrix.get()) {
-            	Thread.yield();
-            }
-            //dc_separate = null;
-            M = dc.getMatrix();
-            matrixFilename = M.toFile(fileName, "Break_10sec_BallRollingRight_" + i);
-            MiddleMatrixChunk mmc2 = new MiddleMatrixChunk(matrixFilename,breakTime);
-            mmc2.generateChunk();
-            mmc2.chunkout();
-            window.setVisible(false);*/
 			
 			
 			/*
@@ -268,7 +223,9 @@ public class PatternDriver extends JFrame {
 			M1.toFile(fileName, "_TestData_C_2ndSecond_"+ i);
 			
 			//obtain and display results
+			System.out.println("_TestData_C_1stSecond_"+ i);
 			System.out.println(outputresult(model.predict(prepareTest(M))));
+			System.out.println("_TestData_C_2ndSecond_"+ i);
 			System.out.println(outputresult(model.predict(prepareTest(M1))));
 
 			
@@ -276,21 +233,6 @@ public class PatternDriver extends JFrame {
 			 * Let the user take a break
 			 */
 			breakTime();
-			
-			
-/*			window.setVisible(true);
-            dc.setMatrix(breakTime);
-            //dc_separate = new DataCollector("thread_data", fileName + "_Break_10sec_BallFloatingUp_" + i);
-            while (dc.writingMatrix.get()) {
-            	Thread.yield();
-            }
-            //dc_separate = null;
-            M = dc.getMatrix();
-            matrixFilename = M.toFile(fileName, "Break_10sec_BallFloatingUp_" + i);
-            MiddleMatrixChunk mmc3 = new MiddleMatrixChunk(matrixFilename,breakTime);
-            mmc3.generateChunk();
-            mmc3.chunkout();
-            window.setVisible(false);*/
 			
             if (i == n) {
             	JOptionPane.showMessageDialog(null, 
@@ -315,12 +257,14 @@ public class PatternDriver extends JFrame {
 		System.out.println("Exiting");
 	}
 
+	
 	/*
 	 * Displays the break time dialog
 	 */
 	private static void breakTime() {
 		JOptionPane.showMessageDialog(null, breakText, "It's break time!", JOptionPane.PLAIN_MESSAGE);
 	}
+	
 	
 	/*
 	 * Elicits a pattern from the data collector. Returns the matrix data
@@ -378,23 +322,8 @@ public class PatternDriver extends JFrame {
 		return m;
 	}
 	
-	/* TODO
-	 * Nobody knows what I do because my creator cant comment
-	 */
-	private static void setupLoadingWindow() {
-		window = new JWindow();
-	  	JPanel pan = new JPanel();
-	  	pan.setBorder(new LineBorder(Color.BLACK));
-	  	pan.setLayout(new GridLayout(1,1));
-	  	pan.add(new JLabel("Please rest for 10 seconds..."));
-	  	
-	  	window.getContentPane().add(pan,"Center");
-	  	window.setSize(200,100);
-	  	window.setLocationRelativeTo(null);
-	}
-	
-	/* TODO
-	 * Nobody knows what I do because my creator cant comment
+	/* 
+	 * 
 	 */
 	static double[] prepareTest(Matrix input){
 		// convert the matrix into a sample
@@ -410,14 +339,16 @@ public class PatternDriver extends JFrame {
 		
 	}
 	
-	/* TODO
-	 * Nobody knows what I do because my creator cant comment
+	/* 
+	 * Builds an output string of the results of 
+	 * SVM's estimation with is passed in as the argument
+	 * results
 	 */
 	static String outputresult(double [] results)
 	{
-		// output the results of SVM's estimation
-		return "\n" + results[0] + "chance it was pattern A\n" + results[1] +
-				"chance it was pattern B\n" + results[2] + "chance it was pattern C";
+		return results[0] + " chance it was pattern A\n" + 
+			   results[1] + " chance it was pattern B\n" + 
+			   results[2] + " chance it was pattern C\n";
 		
 	}
 	

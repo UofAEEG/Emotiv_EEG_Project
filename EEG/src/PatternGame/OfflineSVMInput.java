@@ -10,22 +10,20 @@ public class OfflineSVMInput {
 
 	static String folder = "MatrixData/";
 	
-	static String folder2 = "C:/Users/mark/Documents/GitHub/Emotiv_EEG_Project/EEG";
-	
 	static String trainingA = "_TrainingData_A.txt";
 	static String trainingB = "_TrainingData_B.txt";
 	static String trainingC = "_TrainingData_C.txt";
 	
 	
 	/**  MODIFY HERE  **/
-	static String datePrefix = "2013-04-06-02-27";  //THIS IS WHERE YOU PUT THE DATE PREFIX!
-	static boolean testData = false;                // SET TRUE IF YOU WANT TO PREDICT TEST DATA (we should just test training until model is better)
+	static String datePrefix = "2013-04-07-11-14";  //THIS IS WHERE YOU PUT THE DATE PREFIX!
+	static boolean testData = true;                // SET TRUE IF YOU WANT TO PREDICT TEST DATA (we should just test training until model is better)
 	
 	/**  MODIFY HERE **/
 	
 	// These fields need to be the same as in the PatternDriver
 	// when samples were taken 
-	private static int n = 10; //number of test data rounds
+	private static int n = 2; //number of test data rounds
 	private static int t = 10;
 	private static int T2 = 1; //duration of test data in seconds
 	private static int T1 = t * T2; //duration of training data in seconds
@@ -80,14 +78,14 @@ public class OfflineSVMInput {
 		if(testData) {
 			ArrayList<String> testDataFiles = new ArrayList<String>();
 			for(int i = 1; i <= n; i++) {
-				testDataFiles.add("_TestData_A_1stSecond_" + i  + ".txt");
-				testDataFiles.add("_TestData_A_2ndSecond_" + i  + ".txt");
+				testDataFiles.add(folder + datePrefix + "_TestData_A_1stSecond_" + i  + ".txt");
+				testDataFiles.add(folder + datePrefix + "_TestData_A_2ndSecond_" + i  + ".txt");
 				
-				testDataFiles.add("_TestData_B_1stSecond_" + i  + ".txt");
-				testDataFiles.add("_TestData_B_2ndSecond_" + i  + ".txt");
+				testDataFiles.add(folder + datePrefix + "_TestData_B_1stSecond_" + i  + ".txt");
+				testDataFiles.add(folder + datePrefix + "_TestData_B_2ndSecond_" + i  + ".txt");
 				
-				testDataFiles.add("_TestData_C_1stSecond_" + i  + ".txt");
-				testDataFiles.add("_TestData_C_2ndSecond_" + i  + ".txt");
+				testDataFiles.add(folder + datePrefix + "_TestData_C_1stSecond_" + i  + ".txt");
+				testDataFiles.add(folder + datePrefix + "_TestData_C_2ndSecond_" + i  + ".txt");
 			}
 			predictTestData(model, testDataFiles);
 		}

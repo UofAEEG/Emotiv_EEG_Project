@@ -63,17 +63,17 @@ public class svmModel extends svm {
 
 		this.parameters = new svm_parameter();
 		parameters.svm_type = svm_parameter.C_SVC;
-		parameters.kernel_type = svm_parameter.RBF;
+		parameters.kernel_type = svm_parameter.LINEAR;
 		parameters.C = 1;
-		parameters.degree = 0;
+		parameters.degree = 3;
 		parameters.gamma = 1;
 		parameters.coef0 = 0;
 		
-		parameters.cache_size = 500f;
-		parameters.eps = 0.001f;
-		parameters.C = 1;
+		parameters.cache_size = 1500f;
+		parameters.eps = 0.1f;
+		parameters.C = 10;
 		parameters.nr_weight = 0;
-		parameters.shrinking = 0;
+		parameters.shrinking = 1;
 		parameters.probability = 1;
 		
 		String error_msg = svm.svm_check_parameter(problem, parameters);
