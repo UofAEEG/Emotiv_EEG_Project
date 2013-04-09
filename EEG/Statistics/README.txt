@@ -1,1 +1,1 @@
-T
+This data is only identified by its timestamp, and is not associated with any user.

@@ -1,0 +1,61 @@
+Pattern A training Data:
+
+0.9844984620089575 chance it was pattern A
+0.012862132764139618 chance it was pattern B
+0.002639405226902707 chance it was pattern C
+Pattern b training Data:
+0.010954586237545014 chance it was pattern A
+0.9861160011406573 chance it was pattern B
+0.0029294126217977545 chance it was pattern C
+Pattern C training Data:
+0.011496185487205908 chance it was pattern A
+0.005430784276107478 chance it was pattern B
+0.9830730302366867 chance it was pattern C
+
+Pattern 1
+0.2250597481095831 chance it was pattern A
+0.767917914312445 chance it was pattern B
+0.007022337577971707 chance it was pattern C
+
+Pattern 2
+2.0000002989472427E-14 chance it was pattern A
+0.9999999499999676 chance it was pattern B
+5.000001247367932E-8 chance it was pattern C
+
+Pattern 3
+2.0251558843600715E-5 chance it was pattern A
+0.9977202753630008 chance it was pattern B
+0.002259473078155684 chance it was pattern C
+
+Pattern 4
+4.024157604511802E-9 chance it was pattern A
+0.9999682757615511 chance it was pattern B
+3.172021429137278E-5 chance it was pattern C
+
+Pattern 5
+8.748589790241743E-10 chance it was pattern A
+0.99998520973811 chance it was pattern B
+1.4789387030968121E-5 chance it was pattern C
+
+Pattern 6
+2.0000002989472427E-14 chance it was pattern A
+0.9999999499999676 chance it was pattern B
+5.000001247367932E-8 chance it was pattern C
+
+Pattern 7
+0.990870781634877 chance it was pattern A
+0.004174986579181987 chance it was pattern B
+0.004954231785941224 chance it was pattern C
+
+Pattern 8
+3.077817007691205E-12 chance it was pattern A
+0.9999991242361195 chance it was pattern B
+8.757608025869325E-7 chance it was pattern C
+
+
+Total number of patterns predicted: 8
+Overall Prediction Accuracy (correct predictions/total predictions): 0.25
+Average Prediction Accuracy (sum of prediction accuracy /total prediction): 0.998844275562276
+Average Prediction Accuracy of Pattern A (correct predictions/total predictions): 0.0
+Average Prediction Accuracy of Pattern B (correct predictions/total predictions): 0.2857142857142857
+Average Prediction Accuracy of Pattern C (correct predictions/total predictions): 0.0
