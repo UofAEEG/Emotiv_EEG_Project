@@ -31,8 +31,10 @@ public class CombineSvmMatrix {
 	int col;
 	int totalrow;
 	
-	/**
-	 * @param args
+	/** 
+	 * Constructor for creating a concatenated svm matrix with
+	 * 3 svm matrixes as input
+	 * @param svmMatrix_Pattern1, svmMatrix_Pattern2, svmMatrix_Pattern3
 	 */
 	public CombineSvmMatrix (SvmMatrix svm1,SvmMatrix svm2,SvmMatrix svm3){
 		double currentMatrix[][];
@@ -75,6 +77,11 @@ public class CombineSvmMatrix {
 		
 	}
 	
+	/** 
+	 * Constructor for creating a concatenated svm matrix with
+	 * 2 svm matrixes as input
+	 * @param svmMatrix_Pattern1, svmMatrix_Pattern2
+	 */
 	public CombineSvmMatrix (SvmMatrix svm1,SvmMatrix svm2){
 		double currentMatrix[][];
 		int currentRow = 0;
@@ -106,14 +113,26 @@ public class CombineSvmMatrix {
 	
 	}
 	
+	/**
+	 * Returns the combined svm matrix
+	 * @return CombineSvmMatrix
+	 */
 	public double[][] getSvmMatrix() {
 		return svm;
 	}
 	
+	/**
+	 * Returns the svm matrix label
+	 * @return svmLabel array
+	 */
 	public double[] getSvmLabel() {
 		return svmLabel;
 	}
 	
+	/**
+	 * prints out the svm matrix to an output file
+	 * @param svm filename
+	 */
 	public void svmout(String filename) {
 
 		BufferedWriter writer = null;
@@ -137,6 +156,10 @@ public class CombineSvmMatrix {
 		}
 	}
 	
+	/**
+	 * prints out the svm labels to file
+	 * @param label filename
+	 */
 	public void svmlabelout(String filename) {
 
 		BufferedWriter writer = null;
