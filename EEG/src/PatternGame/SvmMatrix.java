@@ -136,7 +136,9 @@ import java.util.ArrayList;
 
 
 // Records data at every 8 shifts
-
+/*
+ * Constructs a 2 dimensional svm matrix
+ */
 public class SvmMatrix {
 	
 	double svm[][] = null;
@@ -148,6 +150,15 @@ public class SvmMatrix {
 	int rows, cols;
 	static int shift = 8;
 	
+	/**
+	 * SvmMatrix Constructor
+	 * Constructs a SvmMatrix by taking its output filename
+	 * t1 time window, and t2 time window
+	 * 
+	 * @param filename 
+	 * @param t1
+	 * @param t2
+	 */
 	public SvmMatrix(String filename, int t1, int t2) {
 		window = new ArrayList<Double>();
 		this.filename = filename;
@@ -159,7 +170,10 @@ public class SvmMatrix {
 		
 		this.svm = new double[rows][cols];
 	}
-
+	
+	/**
+	 * Prints an svm matrix to file
+	 */
 	public void generateSVM() {
 		BufferedReader reader = null;
 		String line;
@@ -202,14 +216,23 @@ public class SvmMatrix {
 		}
 	}
 	
+	/*
+	 * returns the number of array rows 
+	 */
 	public int getArrayRow() {
 		return rows;
 	}
 	
+	/*
+	 * returns the number of array columns
+	 */
 	public int getArrayCol() {
 		return cols;
 	}
 	
+	/*
+	 * returns the 2 dimensional svm matrix
+	 */
 	public double[][] getMatrix() {
 		return svm;
 	}
