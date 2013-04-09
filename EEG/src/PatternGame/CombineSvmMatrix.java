@@ -75,6 +75,37 @@ public class CombineSvmMatrix {
 		
 	}
 	
+	public CombineSvmMatrix (SvmMatrix svm1,SvmMatrix svm2){
+		double currentMatrix[][];
+		int currentRow = 0;
+		
+		row = svm1.getArrayRow();
+		col = svm1.getArrayCol();
+		totalrow = svm1.getArrayRow() * 2;
+		
+		svm = new double[totalrow][col];
+		svmLabel = new double[totalrow];
+		
+		currentMatrix = svm1.getMatrix();
+		for (int i=0; i<row; i++) {
+			for (int j=0; j<col; j++) {
+				svm[currentRow][j] = currentMatrix[i][j]; 
+			}
+			svmLabel[currentRow] = 1;
+			currentRow++;
+		}
+		
+		currentMatrix = svm2.getMatrix();
+		for (int i=0; i<row; i++) {
+			for (int j=0; j<col; j++) {
+				svm[currentRow][j] = currentMatrix[i][j]; 
+			}
+			svmLabel[currentRow] = 2;
+			currentRow++;
+		}
+	
+	}
+	
 	public double[][] getSvmMatrix() {
 		return svm;
 	}
