@@ -1,0 +1,108 @@
+Pattern A training Data:
+
+0.9816140203129272 chance it was pattern A
+0.013966223263917632 chance it was pattern B
+0.004419756423154978 chance it was pattern C
+
+Pattern b training Data:
+0.004688898538575484 chance it was pattern A
+0.9928488401116347 chance it was pattern B
+0.002462261349789787 chance it was pattern C
+
+Pattern C training Data:
+0.007102747768736366 chance it was pattern A
+0.004028323737353263 chance it was pattern B
+0.9888689284939104 chance it was pattern C
+
+Pattern 1
+9.218011589444815E-9 chance it was pattern A
+4.609490909751525E-9 chance it was pattern B
+0.9999999861724975 chance it was pattern C
+
+Pattern 2
+1.728157370779052E-8 chance it was pattern A
+8.642052066897275E-9 chance it was pattern B
+0.9999999740763743 chance it was pattern C
+
+Pattern 3
+0.023799293379925333 chance it was pattern A
+0.0026414118650465216 chance it was pattern B
+0.9735592947550281 chance it was pattern C
+
+Pattern 4
+2.0000002989472427E-14 chance it was pattern A
+0.9999999499999676 chance it was pattern B
+5.000001247367932E-8 chance it was pattern C
+
+Pattern 5
+0.15142415965393027 chance it was pattern A
+0.8418883948442322 chance it was pattern B
+0.0066874455018377105 chance it was pattern C
+
+Pattern 6
+1.1639181516955727E-6 chance it was pattern A
+0.9995101991505968 chance it was pattern B
+4.886369312515427E-4 chance it was pattern C
+
+Pattern 7
+0.04452407521469721 chance it was pattern A
+0.9510877875143732 chance it was pattern B
+0.0043881372709294545 chance it was pattern C
+
+Pattern 8
+0.8989417818614748 chance it was pattern A
+0.09462579624653739 chance it was pattern B
+0.006432421891987758 chance it was pattern C
+
+Pattern 9
+0.9897961077773698 chance it was pattern A
+0.004500762445701113 chance it was pattern B
+0.005703129776929074 chance it was pattern C
+
+Pattern 10
+0.013659647691378863 chance it was pattern A
+0.005536296487238138 chance it was pattern B
+0.980804055821383 chance it was pattern C
+
+Pattern 11
+2.2153618753072797E-7 chance it was pattern A
+1.1082358247701317E-7 chance it was pattern B
+0.9999996676402301 chance it was pattern C
+
+Pattern 12
+0.004839125387058664 chance it was pattern A
+0.003625346979777513 chance it was pattern B
+0.991535527633164 chance it was pattern C
+
+Pattern 13
+0.27857819030562586 chance it was pattern A
+0.02658893951511179 chance it was pattern B
+0.6948328701792624 chance it was pattern C
+
+Pattern 14
+0.021061855013976883 chance it was pattern A
+0.005001314862486868 chance it was pattern B
+0.9739368301235364 chance it was pattern C
+
+Pattern 15
+8.77001340516063E-9 chance it was pattern A
+4.385444692970207E-9 chance it was pattern B
+0.9999999868445419 chance it was pattern C
+
+Pattern 16
+0.0044209817702820006 chance it was pattern A
+0.0024215412265201873 chance it was pattern B
+0.9931574770031979 chance it was pattern C
+
+Pattern 17
+5.432201505782897E-7 chance it was pattern A
+2.718157476630045E-7 chance it was pattern B
+0.9999991849641018 chance it was pattern C
+
+
+Total number of patterns predicted: 17
+Overall Prediction Accuracy (correct predictions/total predictions): 0.4117647058823529
+Average Prediction Accuracy (sum of prediction accuracy /total prediction): 0.9661551712743833
+Average Prediction Accuracy of Pattern A (correct predictions/total predictions): 0.5
+Average Prediction Accuracy of Pattern B (correct predictions/total predictions): 0.75
+Average Prediction Accuracy of Pattern C (correct predictions/total predictions): 0.2727272727272727

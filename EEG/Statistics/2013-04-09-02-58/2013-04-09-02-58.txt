@@ -1,0 +1,71 @@
+Pattern A training Data:
+
+0.9928148933164724 chance it was pattern A
+6.032666664202206E-4 chance it was pattern B
+0.006581840017107434 chance it was pattern C
+Pattern b training Data:
+6.968239709503917E-6 chance it was pattern A
+0.9976092356652657 chance it was pattern B
+0.002383796095024853 chance it was pattern C
+Pattern C training Data:
+0.0076965877446262595 chance it was pattern A
+0.00449555628079361 chance it was pattern B
+0.9878078559745803 chance it was pattern C
+
+Pattern 1
+0.9959954066960746 chance it was pattern A
+8.026649926492652E-6 chance it was pattern B
+0.003996566653998834 chance it was pattern C
+
+Pattern 2
+0.9530570134750888 chance it was pattern A
+0.012489915147251203 chance it was pattern B
+0.034453071377659995 chance it was pattern C
+
+Pattern 3
+0.05244937421533835 chance it was pattern A
+1.818104859234364E-5 chance it was pattern B
+0.9475324447360693 chance it was pattern C
+
+Pattern 4
+1.7727972771310652E-10 chance it was pattern A
+0.999994079787817 chance it was pattern B
+5.920034903227497E-6 chance it was pattern C
+
+Pattern 5
+3.438235328457191E-4 chance it was pattern A
+0.010857142087540874 chance it was pattern B
+0.9887990343796136 chance it was pattern C
+
+Pattern 6
+0.11350556360049435 chance it was pattern A
+0.8725114778084588 chance it was pattern B
+0.013982958591046778 chance it was pattern C
+
+Pattern 7
+0.9622742403094622 chance it was pattern A
+5.815253786281164E-4 chance it was pattern B
+0.037144234311909684 chance it was pattern C
+
+Pattern 8
+2.9103623579674255E-14 chance it was pattern A
+0.999999899999936 chance it was pattern B
+1.0000003487168574E-7 chance it was pattern C
+
+Pattern 9
+8.254696058726803E-5 chance it was pattern A
+0.9899901739738485 chance it was pattern B
+0.009927279065564423 chance it was pattern C
+
+Pattern 10
+0.1765011121111429 chance it was pattern A
+3.384122672813517E-4 chance it was pattern B
+0.8231604756215758 chance it was pattern C
+
+
+Total number of patterns predicted: 10
+Overall Prediction Accuracy (correct predictions/total predictions): 0.2
+Average Prediction Accuracy (sum of prediction accuracy /total prediction): 0.9923972205378441
+Average Prediction Accuracy of Pattern A (correct predictions/total predictions): 0.3333333333333333
+Average Prediction Accuracy of Pattern B (correct predictions/total predictions): 0.0
+Average Prediction Accuracy of Pattern C (correct predictions/total predictions): 0.3333333333333333

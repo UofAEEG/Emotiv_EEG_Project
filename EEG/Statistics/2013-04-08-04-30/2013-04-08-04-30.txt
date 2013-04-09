@@ -3,10 +3,12 @@ Pattern A training Data:
 0.9850739904150958 chance it was pattern A
 1.3274645843917895E-4 chance it was pattern B
 0.014793263126464956 chance it was pattern C
+
 Pattern b training Data:
 0.02365319830682724 chance it was pattern A
 0.9645817951340978 chance it was pattern B
 0.011765006559075008 chance it was pattern C
+
 Pattern C training Data:
 2.059833981040531E-4 chance it was pattern A
 0.0035189947592670803 chance it was pattern B

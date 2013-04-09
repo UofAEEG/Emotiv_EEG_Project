@@ -156,10 +156,7 @@ public class UserEvaluation extends JFrame {
 		        									JOptionPane.QUESTION_MESSAGE,
 		        									null,
 		        									options,
-		        									null);
-				
-				System.out.println(options[userPattern]);
-				
+		        									null);		
 				
 				predictPattern(results1, userPattern);
 				statsOut.newLine();
