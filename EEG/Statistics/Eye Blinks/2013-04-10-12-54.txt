@@ -1,0 +1,70 @@
+Pattern A training Data:
+
+0.9926747629117237 chance it was pattern A
+0.007325237088276257 chance it was pattern B
+Pattern b training Data:
+4.3133096165742276E-10 chance it was pattern A
+0.999999999568669 chance it was pattern B
+
+Pattern 1
+0.9999998999999902 chance it was pattern A
+1.0000000994736041E-7 chance it was pattern B
+
+Pattern 2
+1.746900127107699E-6 chance it was pattern A
+0.999998253099873 chance it was pattern B
+
+Pattern 3
+0.7898732983756566 chance it was pattern A
+0.21012670162434327 chance it was pattern B
+
+Pattern 4
+0.0027629675851321162 chance it was pattern A
+0.9972370324148678 chance it was pattern B
+
+Pattern 5
+3.8517167228644226E-8 chance it was pattern A
+0.9999999614828328 chance it was pattern B
+
+Pattern 6
+3.00000089999998E-14 chance it was pattern A
+0.9999999999999699 chance it was pattern B
+
+Pattern 7
+0.7477380501447991 chance it was pattern A
+0.25226194985520084 chance it was pattern B
+
+Pattern 8
+0.9999178185683871 chance it was pattern A
+8.218143161294599E-5 chance it was pattern B
+
+Pattern 9
+0.8482766439206134 chance it was pattern A
+0.15172335607938653 chance it was pattern B
+
+Pattern 10
+0.9788180770509725 chance it was pattern A
+0.021181922949027703 chance it was pattern B
+
+Pattern 11
+1.888941590959111E-7 chance it was pattern A
+0.9999998111058409 chance it was pattern B
+
+Pattern 12
+5.823181294293684E-6 chance it was pattern A
+0.9999941768187057 chance it was pattern B
+
+Pattern 13
+0.01678516240009471 chance it was pattern A
+0.9832148375999054 chance it was pattern B
+
+Pattern 14
+1.581931021004002E-10 chance it was pattern A
+0.999999999841807 chance it was pattern B
+
+
+Total number of patterns predicted: 14
+Overall Prediction Accuracy (correct predictions/total predictions): 0.5
+Average Prediction Accuracy (sum of prediction accuracy /total prediction): 0.942882419109402
+Average Prediction Accuracy of Pattern A (correct predictions/total predictions): 0.6666666666666666
+Average Prediction Accuracy of Pattern B (correct predictions/total predictions): 0.375

@@ -1,0 +1,58 @@
+Pattern A training Data:
+
+0.983020121113043 chance it was pattern A
+0.016979878886956887 chance it was pattern B
+Pattern b training Data:
+6.778023199998513E-6 chance it was pattern A
+0.9999932219768 chance it was pattern B
+
+Pattern 1
+3.00000089999998E-14 chance it was pattern A
+0.9999999999999699 chance it was pattern B
+
+Pattern 2
+0.9999908441301455 chance it was pattern A
+9.155869854461328E-6 chance it was pattern B
+
+Pattern 3
+3.00000089999998E-14 chance it was pattern A
+0.9999999999999699 chance it was pattern B
+
+Pattern 4
+0.9999998999999902 chance it was pattern A
+1.0000000994736041E-7 chance it was pattern B
+
+Pattern 5
+0.009890027929519226 chance it was pattern A
+0.9901099720704807 chance it was pattern B
+
+Pattern 6
+3.00000089999998E-14 chance it was pattern A
+0.9999999999999699 chance it was pattern B
+
+Pattern 7
+0.035023284980967205 chance it was pattern A
+0.9649767150190327 chance it was pattern B
+
+Pattern 8
+3.00000089999998E-14 chance it was pattern A
+0.9999999999999699 chance it was pattern B
+
+Pattern 9
+0.9999998999999902 chance it was pattern A
+1.0000000994736041E-7 chance it was pattern B
+
+Pattern 10
+3.00000089999998E-14 chance it was pattern A
+0.9999999999999699 chance it was pattern B
+
+Pattern 11
+3.00000089999998E-14 chance it was pattern A
+0.9999999999999699 chance it was pattern B
+
+
+Total number of patterns predicted: 11
+Overall Prediction Accuracy (correct predictions/total predictions): 0.2727272727272727
+Average Prediction Accuracy (sum of prediction accuracy /total prediction): 0.9999999999999699
+Average Prediction Accuracy of Pattern A (correct predictions/total predictions): 0.0
+Average Prediction Accuracy of Pattern B (correct predictions/total predictions): 0.375
