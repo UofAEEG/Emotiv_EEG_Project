@@ -35,7 +35,9 @@ import java.util.Date;
  *
  *  @author Mark Galloway
  *  @author tfung - helped out with parts
+ *  @author bmhayduk - helped out with parts
  *  @author bing - modified for svm
+ *  
  */
 public class PatternDriver extends JFrame {
 	

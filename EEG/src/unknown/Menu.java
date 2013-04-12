@@ -1,12 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package unknown;
 
 /**
- *Menu system to begin adding more features to the system. This is a skeleton and features need to be added 04/
- * @author Vlaai
+ *Menu system to link features to the system. More Features to be added as the system progresses
+ * @author bmhayduk
  */
 public class Menu extends javax.swing.JFrame {
 

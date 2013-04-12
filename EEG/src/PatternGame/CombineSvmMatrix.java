@@ -5,7 +5,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 /**
- * @author tfung
+ * @author tfung - original
+ * @author bing - modified for svm
  */
 public class CombineSvmMatrix {
 
