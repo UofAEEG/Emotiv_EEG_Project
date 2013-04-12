@@ -8,3 +8,5 @@ hs_err*
 test.txt
 bin/Raw/RawData.class
 
+
+.DS_Store
