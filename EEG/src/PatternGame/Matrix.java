@@ -6,6 +6,8 @@ import java.io.IOException;
 
 
 /*
+ * @author mgallowa, tfung
+ * 
  * This class is a wrapper for raw EEG data, which is
  * stored in the form of a matrix.
  * 

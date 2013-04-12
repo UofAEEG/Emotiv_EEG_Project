@@ -10,6 +10,10 @@ import java.util.Date;
 
 
 /*
+ * @author mgallowa - original
+ * @author tfung - helped out with parts
+ * @author bing - modified for svm
+ * 
  * The pattern game
  * 
  * 
