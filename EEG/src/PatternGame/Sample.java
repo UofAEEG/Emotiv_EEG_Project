@@ -3,6 +3,8 @@ package PatternGame;
 import java.io.BufferedWriter;
 
 /*
+ * @author mgallowa
+ * 
  * This class is acts as a synchronization handler for interactions
  * between DataCollector and PatternDriver. Basically, manages a 
  * producer consumer interaction.

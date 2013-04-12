@@ -11,6 +11,8 @@ import com.sun.jna.Pointer;
 import com.sun.jna.ptr.IntByReference;
 
 /*
+ * @author mgallowa
+ * 
  * Initializes the connection to the Emotiv device in
  * preparation for raw data collection. The Majority of this code
  * was provided by Emotiv and modified for our needs.

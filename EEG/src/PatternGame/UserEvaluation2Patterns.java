@@ -9,7 +9,9 @@ import java.util.Date;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-
+/*
+ * @author mgallowa
+ */
 public class UserEvaluation2Patterns extends JFrame {
 
 	private static final long serialVersionUID = 1L;
