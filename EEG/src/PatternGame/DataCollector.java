@@ -10,16 +10,15 @@ import SDK.EmoState;
 import com.sun.jna.Pointer;
 import com.sun.jna.ptr.IntByReference;
 
-/*
- * @author mgallowa
- * 
+/**
  * Initializes the connection to the Emotiv device in
- * preparation for raw data collection. The Majority of this code
+ * preparation for raw data collection. Some of this code
  * was provided by Emotiv and modified for our needs.
+ * 
+ * @author Mark Galloway
  */
 public class DataCollector extends Thread {
 	
-//	private String fileName = null;
 	private Pointer eState = null;
 	private Pointer eEvent = null;
 	private BufferedWriter out = null;
@@ -117,13 +116,14 @@ public class DataCollector extends Thread {
 									
 									//loop through the the data columns
 									for (int i = 0 ; i < 25 ; i++) {
-										
+										//get the data
 										Edk.INSTANCE.EE_DataGet(hData, i, data, nSamplesTaken.getValue());
-										
+										//write only the columns we are interested in, the sensors
 										if ( i >= 3 && i <= 16) {
 											try {
 												matrix.matrix[sampleNo][i-3] = data[sampleIdx];
 											} catch (ArrayIndexOutOfBoundsException e) {
+											    //matrix is full, we are done
 												writingMatrix = false;
 												sample.setSample(matrix);
 												break breakpoint;
@@ -135,9 +135,6 @@ public class DataCollector extends Thread {
 										out.write(" ");
 									}
 									
-									
-									//increment the sample
-//									if(writingMatrix)
 									sampleNo++;
 									
 									//Print the contact quality columns to our file

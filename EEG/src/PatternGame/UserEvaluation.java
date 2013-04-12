@@ -9,8 +9,16 @@ import java.util.Date;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-/*
- * @author mgallowa
+
+
+/**
+ * A class used to train the SVM and elicit patterns from 
+ * the user, while predicting the pattern with the SVM
+ * predict method. Records statistics and writes
+ * them to file.
+ * 
+ * @author Mark Galloway
+ *
  */
 public class UserEvaluation extends JFrame {
 
@@ -37,7 +45,6 @@ public class UserEvaluation extends JFrame {
 		
 		stats = new ArrayList<Statistic>();
 		Matrix M = null; //handle for the matrices
-		Matrix M1 =  null; // need another matrix for the second sample during testing
 		sample = new Sample(); //handle for the sample object
 		
 		// file name of matrices
@@ -169,7 +176,8 @@ public class UserEvaluation extends JFrame {
 				attempt++;
 			}
 		
-		
+			//print the stats
+			
 			statsOut.newLine();
 			statsOut.newLine();
 			
@@ -203,7 +211,7 @@ public class UserEvaluation extends JFrame {
 	}
 	
 	/*
-	 * 
+	 * Prints the accuracies in readble format to the file
 	 */
 	static void writeResults(double[] results, BufferedWriter statsOut) {
 		try {
@@ -225,7 +233,8 @@ public class UserEvaluation extends JFrame {
 	
 	
 	/*
-	 * 
+	 * Calculates the individual pattern accuracy of the
+	 * argument pattern
 	 */
 	static double individualPatternAccuracy(int pattern) {
 		int count = 0;
@@ -249,7 +258,7 @@ public class UserEvaluation extends JFrame {
 	
 	
 	/*
-	 * 
+	 * Calculates the average of the accuracy
 	 */
 	static double averagePredictionAccuracy() {
 		
@@ -267,7 +276,8 @@ public class UserEvaluation extends JFrame {
 	}
 	
 	/*
-	 * 
+	 * Calculates the total number of correct predictions
+     * divided by total predictions
 	 */
 	static double overallPredictionAccuracy() {
 		

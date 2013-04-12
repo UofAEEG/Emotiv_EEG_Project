@@ -1,10 +1,11 @@
 package PatternGame;
 
-/*
- * @author mgallowa
- * 
+
+/**
  * A class for holding the information of one prediction,
  * used in calculating statistics for user evaluation.
+ * 
+ * @author Mark Galloway
  */
 public class Statistic {
 	

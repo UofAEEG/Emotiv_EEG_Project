@@ -6,9 +6,16 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * 
+ * A simple class for reading in matrix data without
+ * the helmet. Used primarily in the testing of
+ * the SVM configurations and accuracy of predictions
+ * 
+ * @author Mark Galloway
+ *
+ */
 public class OfflineSVMInput {
-
-	static String folder = "MatrixData/";
 	
 	static String trainingA = "_TrainingData_A.txt";
 	static String trainingB = "_TrainingData_B.txt";
@@ -16,6 +23,9 @@ public class OfflineSVMInput {
 	
 	
 	/**  MODIFY HERE  **/
+	
+	static String folder = "MatrixData/"; //folder location may vary
+	
 	static String datePrefix = "2013-04-07-11-14";  //THIS IS WHERE YOU PUT THE DATE PREFIX!
 	static boolean testData = true;                // SET TRUE IF YOU WANT TO PREDICT TEST DATA (we should just test training until model is better)
 	
@@ -56,6 +66,7 @@ public class OfflineSVMInput {
 		// don't need svm anymore
 		svm = null;
 		
+		//print the accuracies
 		System.out.println();
 		System.out.println("Pattern A training Data:");
 		System.out.println(PatternDriver.outputresult(model.predict(PatternDriver.prepareTest(readMatrix(trainingA, T1)))));
@@ -68,10 +79,7 @@ public class OfflineSVMInput {
 		System.out.println("Pattern C training Data:");
 		System.out.println(PatternDriver.outputresult(model.predict(PatternDriver.prepareTest(readMatrix(trainingC, T1)))));
 		
-		
-		
-		
-		
+
 		/*
 		 * predict test data
 		 */

@@ -5,10 +5,13 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+
+
 /*
- * @author tfung
- * 
  * Gets random middle chunk
+ * 
+ * @author Thomas Fung
+ *
  */
 public class MiddleMatrixChunk {
 

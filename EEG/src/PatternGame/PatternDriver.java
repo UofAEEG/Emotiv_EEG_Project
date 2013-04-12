@@ -9,11 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
-/*
- * @author mgallowa - original
- * @author tfung - helped out with parts
- * @author bing - modified for svm
- * 
+/**
  * The pattern game
  * 
  * 
@@ -36,6 +32,10 @@ import java.util.Date;
  *       #SVM_predict
  *       # record SVM predict
  *
+ *
+ *  @author Mark Galloway
+ *  @author tfung - helped out with parts
+ *  @author bing - modified for svm
  */
 public class PatternDriver extends JFrame {
 	
@@ -64,9 +64,6 @@ public class PatternDriver extends JFrame {
 		    								 "top of your head.\nFocus on the ball and follow its movement.\n" +
 		    								 "You will continue this thought for "+ PatternDriver.T1 +" seconds.\n" +
 		    								 "Click OK when you are ready to begin.";
-	
-	private static String breakText = "Good Job. Take a short break before the next pattern.\n" +
-									  "Click Ok when you are ready to continue.";
 	
 	private static String firstTestPattern = "Imagine a spinning ball inside the middle your head. This ball is rolling to towards the " +
 		    								 "left side of your head.\nFocus on the ball and follow its movement.\n" +
@@ -262,10 +259,9 @@ public class PatternDriver extends JFrame {
 	
 	
 	/* 
-	 * 
+	 * convert the matrix into a sample for the svm
 	 */
 	static double[] prepareTest(Matrix input){
-		// convert the matrix into a sample
 		double [] test = new double [128 * 14];
 		for ( int i = 0; i < 128;  i++)
 		{

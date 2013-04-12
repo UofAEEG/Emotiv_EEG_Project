@@ -4,15 +4,15 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
-
-/*
- * @author mgallowa, tfung
- * 
+/**
  * This class is a wrapper for raw EEG data, which is
  * stored in the form of a matrix.
  * 
  * double [sample] [sensor]
  * {[a,b,c,...],[a',b',c',...],[a",b",c",..]}
+ * 
+ * @author Thomas Fung
+ * @author Mark Galloway
  */
 public class Matrix {
 
