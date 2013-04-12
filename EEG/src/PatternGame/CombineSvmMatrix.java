@@ -4,7 +4,9 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-
+/**
+ * @author tfung
+ */
 public class CombineSvmMatrix {
 
 	/* stores a matrix like this

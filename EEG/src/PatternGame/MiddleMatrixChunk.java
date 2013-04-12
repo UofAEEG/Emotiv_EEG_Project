@@ -5,19 +5,29 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-
+/*
+ * @author tfung
+ * 
+ * Gets random middle chunk
+ */
 public class MiddleMatrixChunk {
 
 	double chunk[][] = null;
 	String filename;
 	int time;
 	
+	/*
+	 * 1 second sample
+	 */
 	public MiddleMatrixChunk(String filename, int time) {
 		this.chunk = new double[128][14];
 		this.filename = filename;
 		this.time = time;
 	}
 	
+	/*
+	 * creates random chunk in memory
+	 */
 	public void generateChunk() {
 		BufferedReader reader = null;
 		String line;
@@ -44,7 +54,9 @@ public class MiddleMatrixChunk {
             System.exit(-1);
 		}
 	}
-	
+	/*
+	 * prints out random chunk
+	 */
 	public void chunkout() {
 		BufferedWriter writer = null;
 		
